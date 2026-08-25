@@ -1,0 +1,6 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "helpdesk": "./helpdesk_agent.py:agent"
+  }
+}

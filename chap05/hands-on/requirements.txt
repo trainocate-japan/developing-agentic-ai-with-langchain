@@ -1,0 +1,16 @@
+# ハンズオン 5-A 依存パッケージ
+# 研修基盤に合わせてバージョンをピン留めしています。
+# (本コースの基盤: langchain 1.3 系 / langgraph 1.2 系 / langchain-mcp-adapters 0.3 系)
+
+langchain==1.3.7
+langchain-openai==1.3.0
+langgraph==1.2.4
+langchain-mcp-adapters==0.3.0
+
+# FastMCP サーバー (math_server.py / weather_server.py) を動かすための公式 MCP SDK。
+# mcp は活発に更新されるため、研修実施時に langchain-mcp-adapters 0.3 系と
+# 互換のあるバージョンを確認してください (例: pip install "mcp>=1.9,<2")。
+mcp
+
+# .env から API キーを読み込むため
+python-dotenv

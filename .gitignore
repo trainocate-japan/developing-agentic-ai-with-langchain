@@ -1,0 +1,20 @@
+# 受講者向け公開リポジトリ (このディレクトリ training/code がリポジトリのルート) の .gitignore
+
+# 実際の API キーを含む .env はコミットしない (配布するのは .env.example のみ)
+.env
+.env.local
+
+# Python のキャッシュ・仮想環境
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Jupyter のチェックポイント (第1〜4章の Colab Notebook 用)
+.ipynb_checkpoints/
+
+# OS / エディタの生成物
+.DS_Store
+
+# 第7章の旧版 (v1)。現行の chap07 に置き換え済みのため、受講者向けリポジトリには含めない
+chap07_v1/

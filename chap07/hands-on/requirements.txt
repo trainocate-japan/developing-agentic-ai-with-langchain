@@ -1,0 +1,29 @@
+# ハンズオン 7-A 依存パッケージ
+# 研修基盤に合わせてバージョンをピン留めしています。
+# (本コースの基盤: langchain 1.3 系 / langgraph 1.2 系)
+
+langchain==1.3.7
+langchain-openai==1.3.0
+langgraph==1.2.4
+
+# --- 評価ライブラリ ---
+# openevals : evaluator の採点部品を提供するライブラリ。最終応答の LLM-as-a-judge
+#             (create_llm_as_judge / CORRECTNESS_PROMPT / CONCISENESS_PROMPT) に加え、
+#             トラジェクトリマッチ評価 (create_trajectory_match_evaluator) も提供する。
+#             (トラジェクトリ評価は openevals v0.1.4 で姉妹ライブラリ agentevals から
+#              統合された。古い記事にある agentevals の import は openevals に読み替える)
+# 0.2.0 系。研修実施時に互換版を確認してください
+# (バージョンが進んでいる場合は本コース基盤と整合するものを選定)。
+openevals==0.2.0
+
+# --- LangSmith / pytest 統合 ---
+# langsmith : Dataset / Experiment (client.evaluate) と pytest 統合
+#             (@pytest.mark.langsmith / --langsmith-output) を提供する。
+#             openevals の evaluator を client.evaluate の evaluators に
+#             直接渡すには 0.3.11 以上が必要。
+# pytest    : Python の定番テストランナー (ステップ5 の pytest 統合で使用)。
+langsmith>=0.3.11
+pytest
+
+# .env から API キーを読み込むため
+python-dotenv

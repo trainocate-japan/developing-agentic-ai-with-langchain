@@ -1,0 +1,16 @@
+# 総合演習 (ヘルプデスク・マルチエージェント) 依存パッケージ
+# 研修基盤に合わせてバージョンをピン留めしています。
+# (本コースの基盤: langchain 1.3 系 / langgraph 1.2 系)
+
+langchain==1.3.7
+langchain-openai==1.3.0
+langgraph==1.2.4
+
+# .env から API キーを読み込むため
+python-dotenv
+
+# --- Agent Chat UI / langgraph dev 用 ---
+# langgraph dev コマンド (ローカルの Agent Server) を提供する。
+# [inmem] はインメモリ実行用の追加依存を含む extra。
+# 研修では次のコマンドでも導入できる: pip install -U "langgraph-cli[inmem]"
+langgraph-cli[inmem]

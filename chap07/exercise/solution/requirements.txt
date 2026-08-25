@@ -1,0 +1,28 @@
+# 演習 7-B 依存パッケージ
+# 研修基盤に合わせてバージョンをピン留めしています。
+# (本コースの基盤: langchain 1.3 系 / langgraph 1.2 系)
+
+langchain==1.3.7
+langchain-openai==1.3.0
+langgraph==1.2.4
+
+# --- 評価ライブラリ ---
+# openevals : 最終応答の LLM-as-a-judge (create_llm_as_judge / CORRECTNESS_PROMPT)
+#             を提供する。0.2.0 系。研修実施時に互換版を確認してください。
+# (トラジェクトリマッチ評価も openevals が提供しますが、この演習では最終応答の評価のみ使います)
+openevals==0.2.0
+
+# --- LangSmith ---
+# langsmith : Dataset / Experiment (client.evaluate) を提供する。
+#             openevals の evaluator を client.evaluate の evaluators に
+#             直接渡すには 0.3.11 以上が必要。
+langsmith>=0.3.11
+
+# .env から API キーを読み込むため
+python-dotenv
+
+# --- Agent Chat UI / langgraph dev 用 (ステップ 0) ---
+# langgraph dev コマンド (ローカルの Agent Server) を提供する。
+# [inmem] はインメモリ実行用の追加依存を含む extra。
+# 研修では次のコマンドでも導入できる: pip install -U "langgraph-cli[inmem]"
+langgraph-cli[inmem]
