@@ -1,6 +1,6 @@
 # 演習 6-B【正解 (solution)】: 要承認オペレーションの実装 — ヘルプデスク Step 5
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第6章「Middleware と HITL」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
 このディレクトリは演習 6-B の**正解 (solution)** です。
 `exercise_6B_hitl.py` (CLI 版) は TODO がすべて埋まった完成版、`agent.py` + `langgraph.json` は

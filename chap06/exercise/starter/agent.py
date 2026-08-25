@@ -1,7 +1,7 @@
 """agent.py 【正解 (solution)】 — Agent Chat UI / langgraph dev 用のエージェント定義
 
 演習 6-B: Agent Chat UI で承認フローを体験 — ヘルプデスク Step 5
-研修コース「LangChain による Agentic AI 開発実践」/ 第6章「Middleware と HITL」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
 ============================================================================
 このファイルは `langgraph dev` が読み込むエージェント定義です。

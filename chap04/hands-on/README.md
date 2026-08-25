@@ -1,6 +1,6 @@
 # ハンズオン 4-A: Checkpointer と LangSmith トレース
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第4章「メモリと可観測性」** のハンズオン用コードです。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第4章「メモリと可観測性」** のハンズオン用コードです。
 
 - **ファイル**: [`chap04_handson_4A.ipynb`](./chap04_handson_4A.ipynb)
 - **形式**: Google Colab Notebook (Jupyter nbformat 4)

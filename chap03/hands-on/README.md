@@ -1,6 +1,6 @@
 # ハンズオン 3-A: create_agent で最初のエージェント
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第3章「エージェント開発の基本」** のハンズオン用コードです。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第3章「エージェント開発の基本」** のハンズオン用コードです。
 
 - **ファイル**: [`chap03_handson_3A.ipynb`](./chap03_handson_3A.ipynb)
 - **形式**: Google Colab Notebook (Jupyter nbformat 4)

@@ -1,7 +1,7 @@
 """agent.py 【正解 (solution)】 — Agent Chat UI / langgraph dev 用の supervisor 定義
 
 総合演習: ヘルプデスク・マルチエージェント — ヘルプデスク Step 7 (最終)
-研修コース「LangChain による Agentic AI 開発実践」/ 第8章「マルチエージェント開発」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第8章「マルチエージェント開発」
 
 ============================================================================
 このファイルは `langgraph dev` が読み込む supervisor 定義です。

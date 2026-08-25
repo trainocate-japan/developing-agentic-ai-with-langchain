@@ -1,6 +1,6 @@
 # 第1章「Agentic AI と LangChain」コード
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第1章「Agentic AI と LangChain」** のコード一式です。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第1章「Agentic AI と LangChain」** のコード一式です。
 
 ## この章のコードについて (重要)
 

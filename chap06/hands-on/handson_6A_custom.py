@@ -1,6 +1,6 @@
 """handson_6A_custom.py — ハンズオン 6-A (後半): Custom Middleware の作成と組み込み
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第6章「Middleware と HITL」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
 ============================================================================
 これは「作成済みのコード」です。講師の解説を聞きながら一緒に読み、実行します。

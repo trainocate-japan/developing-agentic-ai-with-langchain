@@ -1,6 +1,6 @@
 # ハンズオン 2-A: Chat Completions API と Function Calling を動かす
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第2章「LLM API の基礎」** のハンズオン用コードです。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第2章「LLM API の基礎」** のハンズオン用コードです。
 
 - **ファイル**: [`chap02_handson_2A.ipynb`](./chap02_handson_2A.ipynb)
 - **形式**: Google Colab Notebook (Jupyter nbformat 4)

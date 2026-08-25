@@ -1,6 +1,6 @@
 # 演習 2-B【solution / 正解】: Function Calling 手動 1 周 — ヘルプデスク Step 1
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第2章「LLM API の基礎」** の演習の**正解コード**です。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第2章「LLM API の基礎」** の演習の**正解コード**です。
 
 - **ファイル**: [`chap02_exercise_2B_solution.ipynb`](./chap02_exercise_2B_solution.ipynb)
 - **問題 (starter)**: [`../starter/chap02_exercise_2B_starter.ipynb`](../starter/chap02_exercise_2B_starter.ipynb)

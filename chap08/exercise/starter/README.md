@@ -1,6 +1,6 @@
 # 総合演習【演習 (starter)】: ヘルプデスク・マルチエージェント — ヘルプデスク Step 7 (最終)
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第8章「マルチエージェント開発」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第8章「マルチエージェント開発」
 
 このディレクトリは総合演習の**演習用 (starter)** です。`capstone_helpdesk_multiagent.py` の
 **TODO①〜④** を自分で埋めて、ヘルプデスク・マルチエージェント (v5) を完成させてください。

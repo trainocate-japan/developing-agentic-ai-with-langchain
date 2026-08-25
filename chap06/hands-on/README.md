@@ -1,6 +1,6 @@
 # ハンズオン 6-A: Prebuilt / Custom Middleware
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第6章「Middleware と HITL」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
 講師の解説を聞きながら、**作成済みのコードを一緒に実行する**ハンズオンです (受講者はコードを書きません)。
 Middleware を「使う」(Prebuilt) と「作る」(Custom) の両方を、ヘルプデスクエージェントで動かして体感します。

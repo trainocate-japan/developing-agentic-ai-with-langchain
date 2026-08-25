@@ -1,6 +1,6 @@
 # 演習 5-B【正解 (solution)】: 社内ナレッジ MCP サーバーの接続 — ヘルプデスク Step 4
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第5章「MCP サーバーの利用」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第5章「MCP サーバーの利用」
 
 このディレクトリは演習 5-B の**正解 (solution)** です。
 `exercise_5B_helpdesk.py` は TODO がすべて埋まった完成版です。

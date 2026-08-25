@@ -1,6 +1,6 @@
 # ハンズオン 5-A: MultiServerMCPClient で 2 サーバー接続
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第5章「MCP サーバーの利用」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第5章「MCP サーバーの利用」
 
 `MultiServerMCPClient` を使い、**2 種類の MCP サーバー** (stdio と HTTP) に同時接続して、
 両方のツールを 1 つのエージェントに持たせて動かすハンズオンです。

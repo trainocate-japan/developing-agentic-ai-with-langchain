@@ -1,7 +1,7 @@
 """run_evaluation.py — ハンズオン 7-A ステップ②③: evaluator 定義 + Experiment 実行 (配布・完成版)
 
 ハンズオン 7-A: LangSmith のオフライン評価を一通り動かす
-研修コース「LangChain による Agentic AI 開発実践」/ 第7章「エージェントの評価」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第7章「エージェントの評価」
 
 ============================================================================
 オフライン評価 4 ステップの「② evaluator 定義」と「③ Experiment 実行」を行う

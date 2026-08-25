@@ -1,6 +1,6 @@
 # 演習 1-1【starter / 受講者用】: 環境疎通確認 + 公式ドキュメント検索
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第1章「Agentic AI と LangChain」** の演習用 Notebook (受講者用) です。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第1章「Agentic AI と LangChain」** の演習用 Notebook (受講者用) です。
 
 - **ファイル**: [`chap01_exercise_1-1_setup.ipynb`](./chap01_exercise_1-1_setup.ipynb)
 - **形式**: Google Colab Notebook (Jupyter nbformat 4)

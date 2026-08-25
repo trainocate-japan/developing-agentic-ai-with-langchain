@@ -1,6 +1,6 @@
 # 演習 6-B【演習 (starter)】: 要承認オペレーションの実装 — ヘルプデスク Step 5
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第6章「Middleware と HITL」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
 このディレクトリは演習 6-B の**演習用 (starter)** です。
 `exercise_6B_hitl.py` (CLI 版) の **TODO①〜④** を自分で埋めて完成させてください。

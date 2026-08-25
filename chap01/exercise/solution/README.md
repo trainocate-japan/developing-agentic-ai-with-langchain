@@ -1,6 +1,6 @@
 # 演習 1-1【solution / 講師用】: 環境疎通確認 + 公式ドキュメント検索
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第1章「Agentic AI と LangChain」** の演習 1-1 の**解答 (講師用)** です。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第1章「Agentic AI と LangChain」** の演習 1-1 の**解答 (講師用)** です。
 
 - **ファイル**: [`chap01_exercise_1-1_setup.ipynb`](./chap01_exercise_1-1_setup.ipynb)
 - **問題 (starter)**: [`../starter/chap01_exercise_1-1_setup.ipynb`](../starter/chap01_exercise_1-1_setup.ipynb)

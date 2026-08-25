@@ -1,6 +1,6 @@
 # 演習 5-B【演習 (starter)】: 社内ナレッジ MCP サーバーの接続 — ヘルプデスク Step 4
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第5章「MCP サーバーの利用」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第5章「MCP サーバーの利用」
 
 `exercise_5B_helpdesk.py` の中にある **TODO①・TODO②** を自分で埋めて、
 ヘルプデスクエージェント **v3** を完成させる演習です。

@@ -1,6 +1,6 @@
 # 演習 7-B【正解 (solution)】: ヘルプデスクの回帰評価 — ヘルプデスク Step 6
 
-研修コース「LangChain による Agentic AI 開発実践」/ 第7章「エージェントの評価」
+研修コース「Agentic AI 開発実践 - LangChain 版」/ 第7章「エージェントの評価」
 
 このディレクトリは演習 7-B の**正解 (solution)** です。`create_dataset.py` (TODO①) と
 `run_regression.py` (TODO②③ + 発展 TODO) がすべて埋まった完成版です。

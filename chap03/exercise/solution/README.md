@@ -1,6 +1,6 @@
 # 演習 3-B【solution / 正解】: ヘルプデスクエージェント v1 — ヘルプデスク Step 2
 
-研修コース「LangChain による Agentic AI 開発実践」 / **第3章「エージェント開発の基本」** の演習の**正解コード**です。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第3章「エージェント開発の基本」** の演習の**正解コード**です。
 
 - **ファイル**: [`chap03_exercise_3B_solution.ipynb`](./chap03_exercise_3B_solution.ipynb)
 - **問題 (starter)**: [`../starter/chap03_exercise_3B_starter.ipynb`](../starter/chap03_exercise_3B_starter.ipynb)
