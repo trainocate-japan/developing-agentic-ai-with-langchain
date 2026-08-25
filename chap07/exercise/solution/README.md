@@ -71,6 +71,16 @@ solution/
 
 ## 実行と結果の読み方
 
+セットアップは `starter/README.md` と共通ですが、**移動先のディレクトリだけが違います**。
+次の 4 行を上から順に実行してから、同じターミナルで実行します。
+
+```bash
+cd ~/developing-agentic-ai-with-langchain   # (1) リポジトリのルートへ
+source .venv/bin/activate                   # (2) venv を有効化 (必ずルートで)
+cd chap07/exercise/solution                 # (3) このディレクトリへ
+pip install -r requirements.txt             # (4) 依存をインストール
+```
+
 ```bash
 python create_dataset.py              # ステップ 1: Dataset 作成 (初回のみ)
 python run_regression.py              # ステップ 3: 修正前 (base) の Experiment

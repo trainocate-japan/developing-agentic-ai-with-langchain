@@ -63,19 +63,24 @@ starter/
 実行環境は **Google Cloud Shell** (Linux) です。**第5章ハンズオン (5-A) で、リポジトリの
 clone・仮想環境 (venv) の作成・`.env` の設定 (OpenAI + LangSmith) は完了している前提**です。
 
-1. (新しいタブの場合は) リポジトリ直下の venv を有効化:
-   ```bash
-   source <リポジトリ>/.venv/bin/activate
-   ```
-2. このディレクトリへ移動:
-   ```bash
-   cd <リポジトリ>/chap07/exercise/starter
-   ```
-3. このディレクトリの依存をインストール (この章では **openevals** が追加で入ります):
-   ```bash
-   pip install -r requirements.txt
-   # (個別に入れる場合は: pip install openevals)
-   ```
+ブラウザで **<https://shell.cloud.google.com/>** を開き (Cloud Shell を開く手順は
+第5章ハンズオン 5-A の README「ステップ 0」を参照)、ターミナルで次の 4 行を上から順に実行します。
+**新しいターミナルを開いた直後や、しばらく放置して再接続したあとも、この 4 行をそのまま実行すれば
+作業を再開できます。**
+
+```bash
+cd ~/developing-agentic-ai-with-langchain   # (1) リポジトリのルートへ
+source .venv/bin/activate                   # (2) venv を有効化 (必ずルートで。プロンプトに (.venv) が付く)
+cd chap07/exercise/starter                  # (3) このディレクトリへ
+pip install -r requirements.txt             # (4) 依存をインストール (このディレクトリで 1 回でよい)
+                                            #     (この章では openevals が追加で入ります)
+```
+
+> - **venv の有効化はリポジトリのルートで行います。** 章のディレクトリには `.venv` がないため、
+>   そこで `source .venv/bin/activate` を実行すると `No such file or directory` になります。
+> - リポジトリを `~` 以外に clone した場合は、`~/developing-agentic-ai-with-langchain` を実際の場所に読み替えてください。
+
+以降のコマンドは、断りがない限り**すべてこのディレクトリ (`chap07/exercise/starter`) で実行します**。
 
 > **API キー / LangSmith について:** API キーはリポジトリのルートの共通 `.env` に記入済みです
 > (5-A で設定)。各スクリプトは先頭で `load_dotenv()` を呼び、ルートの `.env` を読み込みます。
@@ -89,14 +94,38 @@ clone・仮想環境 (venv) の作成・`.env` の設定 (OpenAI + LangSmith) �
 TODO に入る前に、「手動確認」を 1 回だけ体験しておきます。第6章の演習と同じ手順で
 `langgraph dev` を起動し、Agent Chat UI から v4 に 1 ケース聞いてみてください。
 
+**【ターミナル 1】** (= セットアップで使ったターミナル) で、`chap07/exercise/starter`
+(`langgraph.json` がある場所) にいることを確認してから起動します。
+
 ```bash
-# このディレクトリ (langgraph.json がある場所) で Agent Server を起動
-langgraph dev
+langgraph dev --tunnel
 ```
 
-別ターミナルで Agent Chat UI を起動し (手順は第6章 演習 6-B と同じ。接続設定は
-Graph ID = `helpdesk`, Deployment URL = `http://localhost:2024`)、たとえば
-**「VPN に繋がらないのですが、どうすればいいですか?」** と入力して応答を確認します。
+**【ターミナル 2】** をツールバーの **[+]** で新しく開き、Agent Chat UI を起動します
+(詳しい手順・接続設定は第6章 演習 6-B の README「起動から接続までの手順」と同じです)。
+
+```bash
+cd ~                                                  # ホームディレクトリへ (venv は不要)
+npx create-agent-chat-app --project-name my-chat-ui   # 6-B で作成済みならこの行は不要
+cd ~/my-chat-ui
+pnpm install                                          # 6-B で実行済みならこの行は不要
+pnpm dev
+```
+
+Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で **3000** を開き、
+接続設定に次を入力します。
+
+| 設定項目 | 入力する値 |
+|---|---|
+| **Deployment URL** | 【ターミナル 1】に表示された **Tunnel の URL** (`https://xxxxxxxx.trycloudflare.com`) |
+| **Graph ID** | `helpdesk` |
+| **LangSmith API キー** | (空欄で可) |
+
+> **`http://localhost:2024` では繋がりません。** UI はあなたのブラウザの中で動いているため、
+> そこから見た `localhost` は Cloud Shell ではなくあなたの PC を指します (第6章 6-B と同じ理由)。
+
+接続できたら、たとえば **「VPN に繋がらないのですが、どうすればいいですか?」** と入力して
+応答を確認します。
 
 1 ケースなら簡単です。しかし「プロンプトを 1 行直すたびに、VPN もパスワードも稼働確認も
 全部 UI から打ち直す」のは現実的ではありません。ここから先、この確認を**自動評価**に置き換えます。
@@ -199,6 +228,7 @@ reference-free evaluator として追加します (`run_regression.py` の「TOD
 | 比較ビューで差が出ない | 2 つの Experiment が同じ Dataset に対するものか。スコアの揺れで差が消えることもあります (再実行してみる) |
 | スコアが実行ごとに変わる | 正常です。エージェントも judge も LLM なので判定は揺れ得ます。だからこそ複数ケースで継続的に測ります |
 | `langgraph: command not found` (ステップ 0) | `pip install -U "langgraph-cli[inmem]"` を実行したか (仮想環境を有効化しているか) |
+| Agent Chat UI から Agent Server に繋がらない (ステップ 0) | Deployment URL に `http://localhost:2024` を入れていないか。Tunnel URL (またはポート 2024 の Web Preview URL) を使う |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置き、
 > リポジトリに含めるのは値の入っていないルートの `.env.example` (ひな形) だけです。

@@ -66,18 +66,23 @@ starter/
 clone・仮想環境 (venv) の作成・`.env` の設定 (OpenAI + LangSmith) は完了している前提**です
 (本演習はそこに新しい clone や `.env` 作成を足しません)。
 
-1. (新しいタブの場合は) リポジトリ直下の venv を有効化:
-   ```bash
-   source <リポジトリ>/.venv/bin/activate
-   ```
-2. このディレクトリへ移動:
-   ```bash
-   cd <リポジトリ>/chap08/exercise/starter
-   ```
-3. このディレクトリの依存をインストール:
-   ```bash
-   pip install -r requirements.txt
-   ```
+ブラウザで **<https://shell.cloud.google.com/>** を開き (Cloud Shell を開く手順は
+第5章ハンズオン 5-A の README「ステップ 0」を参照)、ターミナルで次の 4 行を上から順に実行します。
+**新しいターミナルを開いた直後や、しばらく放置して再接続したあとも、この 4 行をそのまま実行すれば
+作業を再開できます。**
+
+```bash
+cd ~/developing-agentic-ai-with-langchain   # (1) リポジトリのルートへ
+source .venv/bin/activate                   # (2) venv を有効化 (必ずルートで。プロンプトに (.venv) が付く)
+cd chap08/exercise/starter                  # (3) このディレクトリへ
+pip install -r requirements.txt             # (4) 依存をインストール (このディレクトリで 1 回でよい)
+```
+
+> - **venv の有効化はリポジトリのルートで行います。** 章のディレクトリには `.venv` がないため、
+>   そこで `source .venv/bin/activate` を実行すると `No such file or directory` になります。
+> - リポジトリを `~` 以外に clone した場合は、`~/developing-agentic-ai-with-langchain` を実際の場所に読み替えてください。
+
+以降のコマンドは、断りがない限り**すべてこのディレクトリ (`chap08/exercise/starter`) で実行します**。
 
 > **API キー / LangSmith について:** API キーはリポジトリのルートの共通 `.env` に記入済みです
 > (5-A で設定)。各スクリプトは先頭で `load_dotenv()` を呼び、ルートの `.env` を読み込みます。
@@ -155,17 +160,61 @@ python capstone_helpdesk_multiagent.py
 
 ### 2. Web アプリとして完成 (Agent Chat UI / langgraph dev) ← 本コースの最終成果物
 
-CLI 版で仕組みを理解したら、同じ supervisor を Web UI から動かします。
+CLI 版で仕組みを理解したら、同じ supervisor を Web UI から動かします。ここでは
+**ターミナルを 2 つ**使います (第6章 演習 6-B とまったく同じ流れです)。
+
+| | **【ターミナル 1】** | **【ターミナル 2】** |
+|---|---|---|
+| 用意のしかた | **CLI 版で使ったターミナルをそのまま使う** | ツールバーの **[+]** で**新しく開く** |
+| 作業ディレクトリ | `chap08/exercise/starter` (`langgraph.json` がある場所) | `~` (ホームディレクトリ) |
+| venv | 有効化済み (`(.venv)` が付いている) | **不要** (Node.js のコマンドしか使わないため) |
+| 役割 | **Agent Server を起動しっぱなしにする** | **Agent Chat UI を起動しっぱなしにする** |
+
+#### ターミナル 1: Agent Server を起動する
+
+CLI 版の続きなので、**追加の `cd` や venv 有効化は不要**です
+(ターミナルを開き直した場合は「セットアップ」の 4 行を先に実行してください)。
 
 ```bash
-langgraph dev
+langgraph dev --tunnel
 ```
 
-1. **Cloud Shell の Web Preview** でポート (既定 2024) を公開する。
-2. [Agent Chat UI](https://agentchat.vercel.app) を開き、**Deployment URL** に Web Preview の URL、
-   **Graph ID** に `helpdesk` を入力して接続する (ローカル Agent Server なら LangSmith キーは不要)。
-3. ブラウザから 2 シナリオを操作する。「パスワードをリセットして」では **承認ダイアログ**が出るので、
-   承認するとリセットが実行されます。
+`langgraph dev` が `agent.py` の `supervisor` を読み込み、ローカルの Agent Server を起動します
+(既定 `http://127.0.0.1:2024`)。あわせて表示される **Tunnel の URL**
+(`https://xxxxxxxx.trycloudflare.com`) を**コピー**しておきます。
+**このターミナルは `Ctrl+C` で止めるまでそのまま**にします。
+
+#### ターミナル 2: Agent Chat UI を起動する (ここで新しく開く)
+
+ツールバーの **[+]** で新しいターミナルタブを開き、次を実行します
+(第6章 6-B で `~/my-chat-ui` を作成済みなら、2 行目と 4 行目は不要です)。
+
+```bash
+cd ~                                                  # ホームディレクトリへ (venv は不要)
+npx create-agent-chat-app --project-name my-chat-ui   # 初回のみ・数分かかります
+cd ~/my-chat-ui
+pnpm install                                          # 初回のみ
+pnpm dev                                              # UI を起動 (ポート 3000)
+```
+
+#### ブラウザ: UI を開いて接続する
+
+1. Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で **3000** を指定して開きます。
+   (【ターミナル 2】をまるごと省略し、ホステッド版
+   [Agent Chat UI](https://agentchat.vercel.app) をブラウザで開いてもかまいません)
+2. 接続設定に次の 3 項目を入力します。
+
+   | 設定項目 | 入力する値 |
+   |---|---|
+   | **Deployment URL** | 【ターミナル 1】に表示された **Tunnel の URL**。`--tunnel` を使わない場合は、Web Preview で**ポート 2024** を公開した URL |
+   | **Graph ID** | `helpdesk` (`langgraph.json` の `graphs` のキー) |
+   | **LangSmith API キー** | (空欄で可。ローカル Agent Server への接続では不要) |
+
+   > **`http://localhost:2024` では繋がりません。** Agent Chat UI は**あなたのブラウザの中**で
+   > 動いており、そこから見た `localhost` は Cloud Shell ではなく「あなたの PC」を指すためです。
+
+3. ブラウザから 2 シナリオを操作します。「パスワードをリセットして」では **承認ダイアログ**が
+   出るので、承認するとリセットが実行されます。
 
 > **なぜ Web で承認ダイアログが出るのか:** `agent.py` の supervisor には checkpointer を
 > 渡していません。`langgraph dev` (Agent Server) が永続化をプラットフォームとして提供し、
@@ -202,7 +251,9 @@ langgraph dev
 | `NotImplementedError: TODO...` | 対応する TODO をまだ埋めていない。エラーメッセージの番号の箇所を完成させる |
 | `AttributeError: 'NoneType' ... invoke` | TODO① で faq_agent / ops_agent を `None` のままにしている。create_agent(...) を書く |
 | interrupt 後に再開できない (CLI) | TODO③ で supervisor に checkpointer を渡したか。再開時の thread_id が中断時と同じか |
-| Agent Chat UI で承認ダイアログが出ない | `langgraph dev` でサーバーが起動しているか。Graph ID は `helpdesk` か |
+| Agent Chat UI で承認ダイアログが出ない | 【ターミナル 1】で `langgraph dev` が起動したままか。Graph ID は `helpdesk` か |
+| UI から Agent Server に繋がらない | Deployment URL に `http://localhost:2024` を入れていないか。Tunnel URL (またはポート 2024 の Web Preview URL) を使う |
+| `langgraph: command not found` | venv が有効か (`(.venv)` 表示)。`pip install -U "langgraph-cli[inmem]"` を実行したか |
 | サブが呼ばれない / 呼び分けが変 | TODO② の description が具体的か。supervisor の system_prompt の振り分け指示を確認 |
 | サブが「対応しました」だけ返す | TODO① でサブの system_prompt に「結果は必ず最終メッセージに含める」を書いたか |
 | `OPENAI_API_KEY` 関連のエラー | リポジトリのルートの `.env` に `OPENAI_API_KEY` を記入したか (5-A の手順) |

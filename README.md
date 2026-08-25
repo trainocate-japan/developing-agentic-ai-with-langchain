@@ -74,33 +74,79 @@
 
 > API キーは**コードに直接書かず**、必ず [シークレット] に登録してください。
 
-### 第5〜8章 (Google Cloud Shell) の場合 — 初回セットアップは第5章で 1 回だけ
+### 第5〜8章 (Google Cloud Shell) の場合
 
-第5章のハンズオン (5-A) で次の **初回セットアップを 1 回だけ** 行えば、第6〜8章ではこのセットアップを **使い回します** (作り直しません)。
+第5〜8章は **Google Cloud Shell** (ブラウザ上で使える Linux ターミナル) で `.py` を実行します。
+自分の PC へのインストール作業は不要で、**ブラウザと Google アカウントだけ**で始められます。
+
+#### 手順 0. ブラウザで Cloud Shell を開く
+
+1. ブラウザ (Chrome 推奨) で **Google アカウントにログイン**します。
+2. **<https://shell.cloud.google.com/>** にアクセスします。
+   (Google Cloud コンソール <https://console.cloud.google.com/> を開き、画面右上のツールバーにある
+   **[Cloud Shell をアクティブにする]** アイコン `>_` をクリックしても同じです)
+3. 初回は確認ダイアログが出るので **[続行]** (または [承認]) をクリックします。
+4. 数十秒のプロビジョニングののち、画面にターミナルが開けば準備完了です。
+   次のコマンドで動作確認できます。
+
+   ```bash
+   pwd              # /home/<ユーザー名> と表示される (= ホームディレクトリ)
+   python3 --version
+   ```
+
+#### この先で使う Cloud Shell の操作
+
+| やりたいこと | 操作 |
+|---|---|
+| **新しいターミナルを開く** | ターミナル上部のツールバーの **[+]** (新しいタブを開く) をクリック |
+| **ブラウザでアプリを開く** (第6・8章) | 上部ツールバーの **[ウェブでプレビュー]** アイコン → **[ポートを変更]** でポート番号を指定 |
+| **ファイルを編集する** | `nano <ファイル名>` (保存 = `Ctrl+O` → `Enter`、終了 = `Ctrl+X`)。または `cloudshell edit <ファイル名>` でエディタが開く |
+
+> **ホームディレクトリの中身 (clone したリポジトリ・`.env`・venv) は保存されますが、
+> ターミナルの「状態」は保存されません。** 新しいタブを開いたときや、しばらく放置して
+> 再接続したときは、**ディレクトリ移動 (`cd`) と venv の有効化をやり直す**必要があります。
+> 各章の README には、そのまま貼れるコマンドを載せています。
+
+#### 手順 1. 初回セットアップ (第5〜8章で 1 回だけ)
+
+第5章のハンズオン (5-A) で次を **1 回だけ** 行えば、第6〜8章ではこのセットアップを
+**使い回します** (作り直しません)。Cloud Shell のターミナルに上から順に貼り付けてください。
 
 ```bash
-# 1. リポジトリを取得して、リポジトリのルートへ移動 (この 1 回だけ)
+# 1. ホームディレクトリでリポジトリを取得し、リポジトリのルートへ移動 (この 1 回だけ)
+cd ~
 git clone https://github.com/trainocate-japan/developing-agentic-ai-with-langchain.git
-cd developing-agentic-ai-with-langchain   # ← chap01〜chap08 と .env.example がある場所
+cd ~/developing-agentic-ai-with-langchain   # ← chap01〜chap08 と .env.example がある場所
 
 # 2. リポジトリのルートで仮想環境 (venv) を作って有効化 (第5〜8章で共通)
-python -m venv .venv
-source .venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate                   # プロンプトの先頭に (.venv) が付けば成功
 
 # 3. リポジトリのルートで .env を作成し、キーを記入 (第5〜8章で共通)
 cp .env.example .env
-#   エディタで .env を開き、OPENAI_API_KEY と LANGSMITH_API_KEY (第4章で発行したキー) を記入
+nano .env                                   # OPENAI_API_KEY と LANGSMITH_API_KEY を記入
+                                            #   → 保存は Ctrl+O → Enter、終了は Ctrl+X
 ```
 
-以降、各章では **ディレクトリを移動して依存をインストールするだけ** です。
+> リポジトリを `~` (ホームディレクトリ) 以外に clone した場合は、以降に出てくる
+> `~/developing-agentic-ai-with-langchain` を実際の場所に読み替えてください。
+
+#### 手順 2. 各章での作業 (章が変わるたび・ターミナルを開き直すたび)
+
+以降、各章では **「リポジトリのルートで venv を有効化 → その章のディレクトリへ移動 →
+依存をインストール」** の 3 ステップだけです。次の 4 行は、どのターミナルでもそのまま貼れます。
 
 ```bash
 # 例: 第5章ハンズオン
-cd chap05/hands-on
-pip install -r requirements.txt
-# あとは各章 README の手順に従って実行
+cd ~/developing-agentic-ai-with-langchain   # ① リポジトリのルートへ
+source .venv/bin/activate                   # ② venv を有効化 (新しいターミナルでは毎回必要)
+cd chap05/hands-on                          # ③ その章の作業ディレクトリへ
+pip install -r requirements.txt             # ④ 依存をインストール (章ごとに 1 回でよい)
 ```
 
+> - **venv は必ずリポジトリのルート (`~/developing-agentic-ai-with-langchain`) で有効化します。**
+>   章のディレクトリには `.venv` はないので、`chap05/hands-on` などで `source .venv/bin/activate`
+>   を実行しても `No such file or directory` になります。
 > - `.env` はリポジトリのルートに **1 つ** あれば十分です。各章のスクリプトは、実行位置から上位ディレクトリを遡ってこの `.env` を読み込みます。
 > - **`.env` は Git にコミットしないでください** (キーが漏れます)。`.gitignore` で除外済みです。リポジトリに置くのは値の入っていない `.env.example` だけです。
 

@@ -59,23 +59,29 @@ starter/
 第5章ハンズオン (5-A) で、リポジトリの clone・venv 作成・.env 設定 (OpenAI + LangSmith) は
 完了している前提です。まだの場合は 5-A の手順を先に実施してください。
 
-1. (同じターミナルセッションなら venv は有効なまま。新しいタブの場合は) リポジトリ直下の venv を有効化:
-   ```bash
-   source <リポジトリ>/.venv/bin/activate
-   ```
-2. このディレクトリへ移動:
-   ```bash
-   cd <リポジトリ>/chap05/exercise/starter
-   ```
-3. このディレクトリの依存を追加インストール (前章までと共通なら差分のみ入ります):
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. 実行 (LangSmith は 5-A で設定済みのルート `.env` により自動で有効。トレースは
-   [smith.langchain.com](https://smith.langchain.com) で確認できます)。
+ブラウザで **<https://shell.cloud.google.com/>** を開き (Cloud Shell を開く手順は
+第5章ハンズオン 5-A の README「ステップ 0」を参照)、ターミナルで次の 4 行を上から順に実行します。
+**新しいターミナルを開いた直後や、しばらく放置して再接続したあとも、この 4 行をそのまま実行すれば
+作業を再開できます。**
 
-> ナレッジサーバーは **stdio** なので、HTTP サーバーのような「別ターミナルで先に起動」は
-> 不要です。クライアントが自動でサブプロセス起動します。
+```bash
+cd ~/developing-agentic-ai-with-langchain   # (1) リポジトリのルートへ
+source .venv/bin/activate                   # (2) venv を有効化 (必ずルートで。プロンプトに (.venv) が付く)
+cd chap05/exercise/starter                  # (3) このディレクトリへ
+pip install -r requirements.txt             # (4) 依存をインストール (このディレクトリで 1 回でよい)
+```
+
+> - **venv の有効化はリポジトリのルートで行います。** 章のディレクトリには `.venv` がないため、
+>   そこで `source .venv/bin/activate` を実行すると `No such file or directory` になります。
+> - リポジトリを `~` 以外に clone した場合は、`~/developing-agentic-ai-with-langchain` を実際の場所に読み替えてください。
+
+準備ができたら、**このディレクトリ (`chap05/exercise/starter`) にいるまま**、以降の手順に進みます。
+LangSmith は 5-A で設定済みのルート `.env` により自動で有効です (トレースは
+[smith.langchain.com](https://smith.langchain.com) で確認できます)。
+
+> **この演習で使うターミナルは 1 つだけです。** ナレッジサーバーは **stdio** なので、
+> ハンズオン 5-A の HTTP サーバーのような「別ターミナルで先に起動」は不要です
+> (クライアントが自動でサブプロセス起動します)。
 
 ---
 

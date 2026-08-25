@@ -26,15 +26,47 @@ hands-on/
 | ファイル | transport | 役割 |
 |---|---|---|
 | `servers/math_server.py` | stdio | 足し算・掛け算ツールを公開。クライアントがサブプロセスとして**自動起動** |
-| `servers/weather_server.py` | HTTP | 天気ツールを公開。**別ターミナルで先に起動**しておく必要がある |
+| `servers/weather_server.py` | HTTP | 天気ツールを公開。**【ターミナル 1】で先に起動**しておく必要がある |
 | `handson_5A_client.py` | — | 上記 2 つに接続し、`get_tools()` → `create_agent` → `ainvoke` |
 
 ---
 
-## 初回セットアップ (第5〜8章で 1 回だけ)
+## ステップ 0: ブラウザで Google Cloud Shell を開く
 
-本章から実行環境は **Google Cloud Shell** (Linux) です。リポジトリを clone し、
-`.py` スクリプトをターミナルで実行します。
+本章から実行環境は **Google Cloud Shell** (ブラウザ上で使える Linux ターミナル) です。
+自分の PC へのインストール作業は不要で、**ブラウザと Google アカウントだけ**で始められます。
+
+1. ブラウザ (Chrome 推奨) で **Google アカウントにログイン**します。
+2. **<https://shell.cloud.google.com/>** にアクセスします。
+   (Google Cloud コンソール <https://console.cloud.google.com/> を開き、画面右上のツールバーにある
+   **[Cloud Shell をアクティブにする]** アイコン `>_` をクリックしても同じです)
+3. 初回は確認ダイアログが出るので **[続行]** (または [承認]) をクリックします。
+4. 数十秒のプロビジョニングののち、画面にターミナルが開けば準備完了です。
+   次のコマンドで動作確認しておきましょう。
+
+   ```bash
+   pwd              # /home/<ユーザー名> と表示される (= ホームディレクトリ)
+   python3 --version
+   ```
+
+**このターミナルを、以降 【ターミナル 1】 と呼びます。** 次の「初回セットアップ」は
+すべて【ターミナル 1】で実行してください。
+
+### この先で使う Cloud Shell の操作
+
+| やりたいこと | 操作 |
+|---|---|
+| **新しいターミナルを開く** (このハンズオンで使います) | ターミナル上部のツールバーの **[+]** (新しいタブを開く) をクリック |
+| **ファイルを編集する** | `nano <ファイル名>` (保存 = `Ctrl+O` → `Enter`、終了 = `Ctrl+X`)。または `cloudshell edit <ファイル名>` |
+| **実行中のコマンドを止める** | そのターミナルで `Ctrl+C` |
+
+> **ホームディレクトリの中身 (clone したリポジトリ・`.env`・venv) は保存されますが、
+> ターミナルの「状態」は保存されません。** 新しいタブを開いたときや、しばらく放置して
+> 再接続したときは、**ディレクトリ移動 (`cd`) と venv の有効化をやり直す**必要があります。
+
+---
+
+## 初回セットアップ (第5〜8章で 1 回だけ) — 【ターミナル 1】で実行
 
 > **この clone・venv・.env は第5〜8章で共通です。** ここで 1 回だけ作れば、
 > 以降の章 (5-B / 6-A / 6-B …) では**作り直さず使い回します**。次章からは
@@ -43,19 +75,27 @@ hands-on/
 ### 1. リポジトリを取得して、リポジトリのルートへ移動
 
 ```bash
+cd ~
 git clone https://github.com/trainocate-japan/developing-agentic-ai-with-langchain.git
-cd developing-agentic-ai-with-langchain   # ← リポジトリのルート (chap05 などの章フォルダと .env.example がある場所)
+cd ~/developing-agentic-ai-with-langchain   # ← リポジトリのルート (chap05 などの章フォルダと .env.example がある場所)
 ```
+
+> リポジトリを `~` (ホームディレクトリ) 以外に clone した場合は、以降に出てくる
+> `~/developing-agentic-ai-with-langchain` を実際の場所に読み替えてください。
 
 ### 2. リポジトリのルートで仮想環境 (venv) を作って有効化
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+プロンプトの先頭に `(.venv)` が付けば成功です。
+
 > この `.venv` は**リポジトリのルートに 1 つだけ**作り、第5〜8章で使い回します
-> (章ごとに作り直しません)。
+> (章ごとに作り直しません)。**有効化はいつもリポジトリのルートで行います**——
+> `chap05/hands-on` などの章フォルダには `.venv` がないため、そこで
+> `source .venv/bin/activate` を実行すると `No such file or directory` になります。
 
 ### 3. リポジトリのルートで .env を作成し、キーを記入
 
@@ -64,7 +104,8 @@ source .venv/bin/activate
 
 ```bash
 cp .env.example .env
-# エディタで .env を開き、OPENAI_API_KEY=... と LANGSMITH_API_KEY=... に実際のキーを記入する
+nano .env          # OPENAI_API_KEY=... と LANGSMITH_API_KEY=... に実際のキーを記入
+                   #   → 保存は Ctrl+O → Enter、終了は Ctrl+X
 ```
 
 > **LangSmith はコース全体で有効化しています。** ルートの `.env` に `LANGSMITH_TRACING=true` と
@@ -78,21 +119,34 @@ cp .env.example .env
 ### 4. このハンズオンのディレクトリへ移動して依存をインストール
 
 ```bash
-cd chap05/hands-on
+cd ~/developing-agentic-ai-with-langchain/chap05/hands-on
 pip install -r requirements.txt
 ```
 
+**ここまでで【ターミナル 1】は「venv が有効 (`(.venv)` 表示) + `chap05/hands-on` にいる」状態です。**
+次の実行手順では、この【ターミナル 1】を**閉じずにそのまま使います**。
+
 ---
 
-## 実行する (2 ターミナル手順)
+## 実行する (ターミナルを 2 つ使います)
 
 HTTP の weather サーバーは「あらかじめ起動しておく」必要があるため、ターミナルを 2 つ使います。
 (stdio の math サーバーはクライアントが自動起動するので、手動起動は不要です)
 
+**新しく開くのは 1 つだけ**です。全体像は次のとおりです。
+
+| | **【ターミナル 1】** | **【ターミナル 2】** |
+|---|---|---|
+| 用意のしかた | **初回セットアップで使ったターミナルをそのまま使う** (新しく開かない) | ツールバーの **[+]** で**新しく開く** |
+| 作業ディレクトリ | `~/developing-agentic-ai-with-langchain/chap05/hands-on` | 同左 (開いた直後はホームなので移動が必要) |
+| venv | 有効化済み (`(.venv)` が付いている) | **これから有効化する** |
+| 役割 | **weather HTTP サーバーを起動しっぱなしにする** | **クライアントを実行する** |
+
 ### ターミナル 1: HTTP サーバーを起動して待ち受ける
 
+初回セットアップの続きなので、**追加の `cd` や venv 有効化は不要**です。そのまま実行します。
+
 ```bash
-source .venv/bin/activate        # venv を有効化 (新しいターミナルなので)
 python servers/weather_server.py
 ```
 
@@ -103,16 +157,26 @@ Weather MCP サーバーを起動します: http://127.0.0.1:8000/mcp
 (このターミナルは起動したままにし、別ターミナルでクライアントを実行してください)
 ```
 
-> Cloud Shell では、ターミナル右上の「+」や「ターミナルを分割」で 2 つ目のターミナルを開けます。
+> プロンプトに `(.venv)` が付いていない、または別のディレクトリにいる場合は、
+> 下の「**どのターミナルでも通用する 3 行**」を先に実行してから上のコマンドを打ってください。
 
-### ターミナル 2: クライアントを実行する
+### ターミナル 2: 新しいターミナルを開いてクライアントを実行する
+
+1. ターミナル上部のツールバーの **[+]** をクリックして、**新しいターミナルタブを開きます**。
+2. 新しいタブは **ホームディレクトリ・venv が無効** の状態で開きます。
+   そのため、次の 3 行を**必ず**実行してから、クライアントを起動します。
 
 ```bash
-source .venv/bin/activate        # こちらの新ターミナルでも venv を有効化
-python handson_5A_client.py
+cd ~/developing-agentic-ai-with-langchain   # ① リポジトリのルートへ
+source .venv/bin/activate                   # ② venv を有効化 (ルートで行う)
+cd chap05/hands-on                          # ③ このハンズオンのディレクトリへ
+python handson_5A_client.py                 # ④ クライアントを実行
 ```
 
-### 期待される出力 (例)
+> **どのターミナルでも通用する 3 行**: 上の ①〜③ は「今どのターミナルにいるか分からなくなったとき」の
+> 復帰手順としてもそのまま使えます。すでにルートにいても・すでに venv が有効でも、実行して問題ありません。
+
+### 期待される出力 (例) — 【ターミナル 2】に表示されます
 
 ```
 取得したツール: ['add', 'multiply', 'get_weather']
@@ -127,6 +191,11 @@ python handson_5A_client.py
 - `取得したツール` に **math サーバーの add / multiply** と **weather サーバーの get_weather** の
   両方が並んでいれば、2 サーバー接続が成功しています。
 - 数式の質問では math のツールが、天気の質問では weather のツールが呼ばれます。
+
+### 後片付け
+
+確認が終わったら、**【ターミナル 1】で `Ctrl+C`** を押して weather サーバーを停止します
+(起動したままでも次の演習 5-B に進めますが、止めておくとポート 8000 が解放されます)。
 
 ---
 
@@ -167,7 +236,12 @@ LangSmith は**コース全体で有効化済み**です。初回セットアッ
 
 | 症状 | 確認すること |
 |---|---|
-| `get_weather` が取れない / 接続エラー | ターミナル 1 で weather サーバーが起動しているか。URL が `http://127.0.0.1:8000/mcp` か |
+| `.venv/bin/activate: No such file or directory` | venv の有効化は**リポジトリのルート**で行います。`cd ~/developing-agentic-ai-with-langchain` してから `source .venv/bin/activate` |
+| `ModuleNotFoundError: langchain_mcp_adapters` など | プロンプトに `(.venv)` が付いているか (venv が有効か)。付いていなければ「どのターミナルでも通用する 3 行」を実行 |
+| `python: command not found` | venv が有効になっていません。同上の 3 行を実行してください (venv を有効化すると `python` が使えます) |
+| `get_weather` が取れない / 接続エラー | **【ターミナル 1】** で weather サーバーが起動したままか。URL が `http://127.0.0.1:8000/mcp` か |
+| `Address already in use` (ポート 8000) | weather サーバーを二重に起動しています。**【ターミナル 1】** 以外で起動したものを `Ctrl+C` で止める |
+| `python: can't open file 'servers/weather_server.py'` | そのターミナルが `chap05/hands-on` にいません。`cd ~/developing-agentic-ai-with-langchain/chap05/hands-on` |
 | `OPENAI_API_KEY` 関連のエラー | リポジトリのルートに `.env` を作成し、キーを記入したか (初回セットアップ手順 3) |
 | math サーバーが起動しない | `args` のパスは絶対パスか (本コードは `os.path.abspath` で自動解決済み) |
 

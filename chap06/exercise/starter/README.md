@@ -57,24 +57,29 @@ starter/
 第5章ハンズオン (5-A) で、リポジトリの clone・venv 作成・.env 設定 (OpenAI + LangSmith) は
 完了している前提です。まだの場合は 5-A の手順を先に実施してください。
 
-1. (同じターミナルセッションなら venv は有効なまま。新しいタブの場合は) リポジトリ直下の venv を有効化:
-   ```bash
-   source <リポジトリ>/.venv/bin/activate
-   ```
-2. このディレクトリへ移動:
-   ```bash
-   cd <リポジトリ>/chap06/exercise/starter
-   ```
-3. このディレクトリの依存を追加インストール (前章までと共通なら差分のみ入ります):
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. TODO①〜④ を埋めてから実行 (approve → reject の 2 パターンを体験。LangSmith は 5-A で
-   設定済みのルート `.env` により自動で有効。トレースは
-   [smith.langchain.com](https://smith.langchain.com) で確認できます):
-   ```bash
-   python exercise_6B_hitl.py
-   ```
+ブラウザで **<https://shell.cloud.google.com/>** を開き (Cloud Shell を開く手順は
+第5章ハンズオン 5-A の README「ステップ 0」を参照)、ターミナルで次の 4 行を上から順に実行します。
+**新しいターミナルを開いた直後や、しばらく放置して再接続したあとも、この 4 行をそのまま実行すれば
+作業を再開できます。**
+
+```bash
+cd ~/developing-agentic-ai-with-langchain   # (1) リポジトリのルートへ
+source .venv/bin/activate                   # (2) venv を有効化 (必ずルートで。プロンプトに (.venv) が付く)
+cd chap06/exercise/starter                  # (3) このディレクトリへ
+pip install -r requirements.txt             # (4) 依存をインストール (このディレクトリで 1 回でよい)
+```
+
+> - **venv の有効化はリポジトリのルートで行います。** 章のディレクトリには `.venv` がないため、
+>   そこで `source .venv/bin/activate` を実行すると `No such file or directory` になります。
+> - リポジトリを `~` 以外に clone した場合は、`~/developing-agentic-ai-with-langchain` を実際の場所に読み替えてください。
+
+準備ができたら **TODO①〜④ を埋め**、**このディレクトリ (`chap06/exercise/starter`) にいるまま**
+実行します (approve → reject の 2 パターンを体験。LangSmith は 5-A で設定済みのルート `.env` により
+自動で有効。トレースは [smith.langchain.com](https://smith.langchain.com) で確認できます)。
+
+```bash
+python exercise_6B_hitl.py
+```
 
 ### TODO①〜④ とヒント
 
@@ -137,38 +142,82 @@ CLI で学んだ承認フローを、業務ユーザーに見せられる**ブ�
 
 ### 起動から接続までの手順 (Google Cloud Shell)
 
+ここからは **ターミナルを 2 つ**使います。**新しく開くのは 1 つだけ**です。
+
+| | **【ターミナル 1】** | **【ターミナル 2】** |
+|---|---|---|
+| 用意のしかた | **パート 1 で使ったターミナルをそのまま使う** | ツールバーの **[+]** で**新しく開く** |
+| 作業ディレクトリ | `chap06/exercise/starter` (`langgraph.json` がある場所) | `~` (ホームディレクトリ) |
+| venv | 有効化済み (`(.venv)` が付いている) | **不要** (Node.js のコマンドしか使わないため) |
+| 役割 | **Agent Server (`langgraph dev`) を起動しっぱなしにする** | **Agent Chat UI を起動しっぱなしにする** |
+
+#### ターミナル 1: Agent Server (`langgraph dev`) を起動する
+
+パート 1 の続きなので、**追加の `cd` や venv 有効化は不要**です。
+(ターミナルを開き直してしまった場合は、上の「セットアップ」の 4 行を先に実行してください)
+
 ```bash
-# 0. (未導入なら) langgraph dev コマンドを導入
-pip install -U "langgraph-cli[inmem]"   # requirements.txt にも含めてあります
-
-# 1. このディレクトリ (langgraph.json がある場所) で Agent Server を起動
-langgraph dev
-#   → 次のような出力が出る:
-#       - 🚀 API: http://127.0.0.1:2024
-#       - 📚 API Docs: http://127.0.0.1:2024/docs
+langgraph dev --tunnel
 ```
+
+- `langgraph dev` は `langgraph.json` を読むので、**`chap06/exercise/starter` にいることが必須**です。
+- `langgraph: command not found` になる場合は `pip install -U "langgraph-cli[inmem]"`
+  (`requirements.txt` にも含めてあります)。
+- `--tunnel` を付けると、ローカルの Agent Server に**外から到達できる公開 URL** が発行されます
+  (次の「接続設定」で必要になります)。
+
+起動すると次のような出力が出ます。**Tunnel の URL をコピー**しておき、
+**このターミナルは `Ctrl+C` で止めるまでそのまま**にします。
+
+```
+- API: http://127.0.0.1:2024
+- Tunnel: https://xxxxxxxx.trycloudflare.com     <- これをコピー
+- API Docs: http://127.0.0.1:2024/docs
+```
+
+> **`--tunnel` を使わない場合**は、Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で
+> ポート **2024** を公開し、開いたタブの URL (`https://2024-....cloudshell.dev`) を
+> Deployment URL に使ってください。
+
+#### ターミナル 2: Agent Chat UI を起動する (ここで新しく開く)
+
+ツールバーの **[+]** で**新しいターミナルタブを開き**、次を上から順に実行します。
+新しいタブはホームディレクトリで開きます。**UI はリポジトリの中ではなくホームに作ります**
+(リポジトリを汚さないため)。このターミナルでは **venv の有効化は不要**です。
 
 ```bash
-# 2. 別のターミナルで Agent Chat UI をローカル起動
-npx create-agent-chat-app --project-name my-chat-ui
-cd my-chat-ui
-pnpm install
-pnpm dev
-#   (手早く試すだけなら、ホステッド版 https://agentchat.vercel.app でも可)
+cd ~                                                  # (1) ホームディレクトリへ
+npx create-agent-chat-app --project-name my-chat-ui   # (2) UI を生成 (初回のみ・数分かかります)
+cd ~/my-chat-ui                                       # (3) 生成された UI のディレクトリへ
+pnpm install                                          # (4) 依存をインストール (初回のみ)
+pnpm dev                                              # (5) UI を起動 (ポート 3000)
 ```
 
-```text
-3. Cloud Shell の「Web Preview」でポートを公開する
-   - 画面右上の [ウェブでプレビュー] アイコン → [ポートを変更] で UI のポート (例: 3000) を開く
-```
+**このターミナルも `Ctrl+C` で止めるまでそのまま**にします。
+
+> 2 回目以降は (2) と (4) は不要で、`cd ~/my-chat-ui && pnpm dev` だけで起動できます。
+> **手早く試すだけなら**、この【ターミナル 2】の作業をすべて省略し、ホステッド版
+> <https://agentchat.vercel.app> をブラウザで開いても構いません。
+
+#### ブラウザ: Web Preview で UI を開く
+
+Cloud Shell 上部ツールバーの **[ウェブでプレビュー]** アイコン → **[ポートを変更]** で
+**3000** を指定して開きます。Agent Chat UI の画面が新しいタブで表示されます。
 
 ### 接続設定は 3 項目だけ
 
+UI を開くと接続設定の入力画面が出ます。次の 3 項目を入力します。
+
 | 設定項目 | 入力する値 | 補足 |
 |---|---|---|
+| **Deployment URL** | 【ターミナル 1】に表示された **Tunnel の URL** (`https://xxxxxxxx.trycloudflare.com`) | `--tunnel` を使わない場合はポート 2024 の Web Preview URL |
 | **Graph ID** | `helpdesk` | `langgraph.json` の `graphs` のキー |
-| **Deployment URL** | `http://localhost:2024` | `langgraph dev` が表示した API の URL |
 | **LangSmith API キー** | (空欄で可) | **ローカルサーバー接続時は不要** |
+
+> **`http://localhost:2024` は入力しても繋がりません。** Agent Chat UI は**あなたのブラウザの中**で
+> 動いており、そこから見た `localhost` は「Cloud Shell」ではなく「あなたの PC」を指すためです。
+> 必ず **Cloud Shell の外から到達できる URL** (Tunnel URL またはポート 2024 の Web Preview URL) を
+> 入力してください。
 
 ### ブラウザで承認フローを操作する
 
@@ -199,7 +248,8 @@ pnpm dev
 | `___` のままでエラー / 構文エラー | TODO①〜④の `___` を実際のコードに置き換えたか |
 | interrupt 後に再開できずエラー | **CLI 版**は checkpointer を渡したか (TODO②)。再開時の `thread_id` が中断時と同じか |
 | `ModuleNotFoundError: helpdesk_tools` | このディレクトリから実行しているか (`helpdesk_tools.py` と同じ場所) |
-| Agent Chat UI で承認ダイアログが出ない | `langgraph dev` が起動しているか、Graph ID が `helpdesk`、URL が `http://localhost:2024` か |
+| Agent Chat UI で承認ダイアログが出ない | 【ターミナル 1】で `langgraph dev` が起動したままか。Graph ID が `helpdesk` か |
+| UI から Agent Server に繋がらない | Deployment URL に `http://localhost:2024` を入れていないか。Tunnel URL (またはポート 2024 の Web Preview URL) を使う |
 | `langgraph: command not found` | `pip install -U "langgraph-cli[inmem]"` を実行したか (仮想環境を有効化しているか) |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置き、

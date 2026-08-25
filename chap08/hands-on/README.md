@@ -39,18 +39,24 @@ hands-on/
 clone・仮想環境 (venv) の作成・`.env` の設定 (OpenAI + LangSmith) は完了している前提**です
 (本章はそこに新しい clone や `.env` 作成を足しません)。
 
-1. (新しいタブの場合は) リポジトリ直下の venv を有効化:
-   ```bash
-   source <リポジトリ>/.venv/bin/activate
-   ```
-2. このディレクトリへ移動:
-   ```bash
-   cd <リポジトリ>/chap08/hands-on
-   ```
-3. このディレクトリの依存をインストール:
-   ```bash
-   pip install -r requirements.txt
-   ```
+ブラウザで **<https://shell.cloud.google.com/>** を開き (Cloud Shell を開く手順は
+第5章ハンズオン 5-A の README「ステップ 0」を参照)、ターミナルで次の 4 行を上から順に実行します。
+**新しいターミナルを開いた直後や、しばらく放置して再接続したあとも、この 4 行をそのまま実行すれば
+作業を再開できます。**
+
+```bash
+cd ~/developing-agentic-ai-with-langchain   # (1) リポジトリのルートへ
+source .venv/bin/activate                   # (2) venv を有効化 (必ずルートで。プロンプトに (.venv) が付く)
+cd chap08/hands-on                          # (3) このディレクトリへ
+pip install -r requirements.txt             # (4) 依存をインストール (このディレクトリで 1 回でよい)
+```
+
+> - **venv の有効化はリポジトリのルートで行います。** 章のディレクトリには `.venv` がないため、
+>   そこで `source .venv/bin/activate` を実行すると `No such file or directory` になります。
+> - リポジトリを `~` 以外に clone した場合は、`~/developing-agentic-ai-with-langchain` を実際の場所に読み替えてください。
+
+以降のコマンドは、**すべてこのディレクトリ (`chap08/hands-on`) で実行します**
+(ターミナルは 1 つで足ります)。
 
 > **API キー / LangSmith について:** API キーはリポジトリのルートの共通 `.env` に記入済みです
 > (5-A で設定)。スクリプトは先頭で `load_dotenv()` を呼び、ルートの `.env` を読み込みます。
