@@ -139,6 +139,7 @@ python exercise_5B_helpdesk.py
 
 | 症状 | 確認すること |
 |---|---|
+| `ModuleNotFoundError: No module named 'mcp.server.fastmcp'` | `mcp` パッケージが 2.x になっています (2.0 で FastMCP が削除されました)。`pip install -r requirements.txt` を実行し直して 1.x に戻してください (`pip show mcp` で確認できます) |
 | ツールが取れない / 接続エラー | `args` のパスは絶対パスか (本コードは `os.path.abspath` で自動解決済み) |
 | `OPENAI_API_KEY` 関連のエラー | リポジトリのルートに `.env` を作成し、キーを記入したか (5-A のセットアップ) |
 | FAQ は呼ばれるが稼働状況が呼ばれない | `tools` に `get_system_status` を結合できているか (解答②) |

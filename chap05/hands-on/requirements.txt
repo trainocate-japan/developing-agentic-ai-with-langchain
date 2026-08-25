@@ -8,9 +8,11 @@ langgraph==1.2.4
 langchain-mcp-adapters==0.3.0
 
 # FastMCP サーバー (math_server.py / weather_server.py) を動かすための公式 MCP SDK。
-# mcp は活発に更新されるため、研修実施時に langchain-mcp-adapters 0.3 系と
-# 互換のあるバージョンを確認してください (例: pip install "mcp>=1.9,<2")。
-mcp
+# バージョン指定は必須です。mcp 2.0.0 (2026-07-28 リリース) で FastMCP は MCPServer に改称され、
+# `mcp.server.fastmcp` モジュールが削除されました。バージョンを指定しないと 2.x が入り、
+# サーバー起動時に ModuleNotFoundError: No module named 'mcp.server.fastmcp' で失敗します。
+# 下記は 1.x 系の最終版で、langchain-mcp-adapters 0.3.0 (mcp>=1.9.2 を要求) と互換です。
+mcp==1.29.1
 
 # .env から API キーを読み込むため
 python-dotenv

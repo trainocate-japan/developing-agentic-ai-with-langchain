@@ -236,6 +236,7 @@ LangSmith は**コース全体で有効化済み**です。初回セットアッ
 
 | 症状 | 確認すること |
 |---|---|
+| `ModuleNotFoundError: No module named 'mcp.server.fastmcp'` | `mcp` パッケージが 2.x になっています (2.0 で FastMCP が削除されました)。`pip install -r requirements.txt` を実行し直して 1.x に戻してください (`pip show mcp` で確認できます) |
 | `.venv/bin/activate: No such file or directory` | venv の有効化は**リポジトリのルート**で行います。`cd ~/developing-agentic-ai-with-langchain` してから `source .venv/bin/activate` |
 | `ModuleNotFoundError: langchain_mcp_adapters` など | プロンプトに `(.venv)` が付いているか (venv が有効か)。付いていなければ「どのターミナルでも通用する 3 行」を実行 |
 | `python: command not found` | venv が有効になっていません。同上の 3 行を実行してください (venv を有効化すると `python` が使えます) |
