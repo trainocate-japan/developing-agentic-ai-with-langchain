@@ -90,8 +90,8 @@ research_agent = create_agent(
     model=MODEL,
     tools=[search_docs],
     system_prompt=(
-        "あなたは技術調査の専門家です。search_docs ツールでトピックを調べ、"
-        "分かったことを要約してください。"
+        "あなたは技術調査の専門家です。依頼を受けたら自分の記憶で答えず、"
+        "必ず search_docs ツールでトピックを調べ、分かったことを要約してください。"
         "調査結果は必ずあなたの最終メッセージに含めてください "
         "(あなたを呼び出した側は、あなたの最終メッセージしか見ません)。"
     ),
@@ -107,7 +107,13 @@ research_agent = create_agent(
 #       「何をするか + いつ使うか」を具体的に書く。
 #   - result["messages"][-1].content … サブの最終メッセージだけを取り出して返す。
 #       これが「メインに返るのは最終メッセージだけ」の実装上の正体。
-@tool("research", description="トピックを調査して要点を返す。事実確認・情報収集が必要なときに使う")
+@tool(
+    "research",
+    description=(
+        "トピックを調査して要点を返す。ユーザーの質問に答える前に、"
+        "必ずこのツールで正しい情報を確認する (事実確認・情報収集の唯一の手段)"
+    ),
+)
 def call_research_agent(query: str) -> str:
     result = research_agent.invoke({"messages": [{"role": "user", "content": query}]})
     return result["messages"][-1].content
@@ -124,8 +130,15 @@ supervisor = create_agent(
     tools=[call_research_agent],
     system_prompt=(
         "あなたは調査を取りまとめる担当者です。"
-        "事実確認や情報収集が必要なときは research ツールに調査を依頼し、"
-        "その結果を踏まえてユーザーに分かりやすく回答してください。"
+        "ユーザーから質問を受けたら、自分の知識だけで答えず、必ず research ツールに調査を依頼し、"
+        "その結果を根拠にユーザーへ分かりやすく回答してください。"
+        # ↓ 「必要なときは research を使う」と条件付きで書くと、モデルが「自分の知識で
+        #   答えられる」と判断した質問では research を呼ばずに完走してしまい、
+        #   Subagents の入れ子トレース (このハンズオンの主目的) が観察できない。
+        #   実務でも、モデルの記憶に頼らせず必ず一次情報を引かせるのは
+        #   ハルシネーション対策の定石なので、ここでは委譲を必須にしておく。
+        "あなたが根拠にできる情報は research の調査結果だけです "
+        "(あなた自身の記憶は古い可能性があります)。"
     ),
 )
 
@@ -138,6 +151,19 @@ def run_once(label: str, query: str) -> None:
     result = supervisor.invoke({"messages": [{"role": "user", "content": query}]})
     print("[supervisor の最終回答]")
     print(result["messages"][-1].content)
+
+    # research を経由したかを確認する。モデルが自分の知識で答えてしまうと
+    # サブエージェントが動かず、入れ子トレースも 4 回のモデル呼び出しも観察できない。
+    called = [
+        call["name"]
+        for message in result["messages"]
+        for call in (getattr(message, "tool_calls", None) or [])
+    ]
+    if "research" in called:
+        print("[OK] research (サブエージェント) を経由しました。")
+    else:
+        print("[注意] research が呼ばれませんでした (モデルが自分の知識で回答)。")
+        print("       supervisor の system_prompt の指示と、依頼文の内容を見直してください。")
     print()
 
 
