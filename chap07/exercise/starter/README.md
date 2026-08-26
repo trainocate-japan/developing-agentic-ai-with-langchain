@@ -101,23 +101,31 @@ TODO に入る前に、「手動確認」を 1 回だけ体験しておきます
 langgraph dev --tunnel
 ```
 
+起動後のバナーの **`🚀 API:` の行**に出る URL (`https://....trycloudflare.com`) が
+Tunnel の URL です (`--tunnel` を付けると API の URL がそのまま公開 URL になります)。
+**Cloud Shell の Web Preview でポート 2024 を公開した URL は、認証で弾かれるため使えません**
+(理由は第6章 6-B の README を参照)。
+
 **【ターミナル 2】** をツールバーの **[+]** で新しく開き、Agent Chat UI を起動します
 (詳しい手順・接続設定は第6章 演習 6-B の README「起動から接続までの手順」と同じです)。
 
 ```bash
 cd ~                                                  # ホームディレクトリへ (venv は不要)
-npx create-agent-chat-app --project-name my-chat-ui   # 6-B で作成済みならこの行は不要
-cd ~/my-chat-ui
-pnpm install                                          # 6-B で実行済みならこの行は不要
-pnpm dev
+npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager npm --framework nextjs --include-agent react --install-deps true   # 6-B で作成済みならこの行は不要
+cd ~/my-chat-ui/apps/web                              # UI (web) のディレクトリへ
+npm run dev                                           # UI を起動 (ポート 3000)
 ```
+
+> **起動するのは `apps/web` だけです。** ルート (`~/my-chat-ui`) で `npm run dev` すると、使わない
+> 同梱 Agent Server (`apps/agents`) も起動して `ERR_PACKAGE_PATH_NOT_EXPORTED` が出ます
+> (理由は第6章 6-B の README と同じ)。
 
 Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で **3000** を開き、
 接続設定に次を入力します。
 
 | 設定項目 | 入力する値 |
 |---|---|
-| **Deployment URL** | 【ターミナル 1】に表示された **Tunnel の URL** (`https://xxxxxxxx.trycloudflare.com`) |
+| **Deployment URL** | 【ターミナル 1】の **`🚀 API:` に表示された URL** (`https://xxxxxxxx.trycloudflare.com`) |
 | **Graph ID** | `helpdesk` |
 | **LangSmith API キー** | (空欄で可) |
 
@@ -228,7 +236,7 @@ reference-free evaluator として追加します (`run_regression.py` の「TOD
 | 比較ビューで差が出ない | 2 つの Experiment が同じ Dataset に対するものか。スコアの揺れで差が消えることもあります (再実行してみる) |
 | スコアが実行ごとに変わる | 正常です。エージェントも judge も LLM なので判定は揺れ得ます。だからこそ複数ケースで継続的に測ります |
 | `langgraph: command not found` (ステップ 0) | `pip install -U "langgraph-cli[inmem]"` を実行したか (仮想環境を有効化しているか) |
-| Agent Chat UI から Agent Server に繋がらない (ステップ 0) | Deployment URL に `http://localhost:2024` を入れていないか。Tunnel URL (またはポート 2024 の Web Preview URL) を使う |
+| Agent Chat UI から Agent Server に繋がらない (ステップ 0) | Deployment URL に `http://localhost:2024` や Web Preview (ポート 2024) の URL を入れていないか。`--tunnel` で発行された `https://....trycloudflare.com` (出力の `🚀 API:` の行) を使う |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置き、
 > リポジトリに含めるのは値の入っていないルートの `.env.example` (ひな形) だけです。

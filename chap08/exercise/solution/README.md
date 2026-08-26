@@ -126,23 +126,32 @@ CLI 版の続きなので、**追加の `cd` や venv 有効化は不要**です
 langgraph dev --tunnel
 ```
 
-`langgraph dev` が `agent.py` の `supervisor` を読み込み、ローカルの Agent Server を起動します
-(既定 `http://127.0.0.1:2024`)。あわせて表示される **Tunnel の URL**
-(`https://xxxxxxxx.trycloudflare.com`) を**コピー**しておきます。
+`langgraph dev` が `agent.py` の `supervisor` を読み込み、ローカルの Agent Server を起動します。
+起動後のバナーの **`🚀 API:` の行**に出る URL
+(`https://....trycloudflare.com`) を**コピー**しておきます
+(`--tunnel` を付けると、API の URL がそのまま Tunnel の公開 URL になります。
+付けない場合は `http://127.0.0.1:2024` と表示され、UI からは接続できません)。
 **このターミナルは `Ctrl+C` で止めるまでそのまま**にします。
+
+> **Cloud Shell の Web Preview でポート 2024 を公開した URL は使えません。**
+> あなたのユーザーアカウントでの認証が必要な URL のため、Agent Chat UI からの呼び出しは弾かれます
+> (詳細は第6章 6-B の README)。
 
 #### ターミナル 2: Agent Chat UI を起動する (ここで新しく開く)
 
 ツールバーの **[+]** で新しいターミナルタブを開き、次を実行します
-(第6章 6-B で `~/my-chat-ui` を作成済みなら、2 行目と 4 行目は不要です)。
+(第6章 6-B で `~/my-chat-ui` を作成済みなら、2 行目は不要です)。
 
 ```bash
 cd ~                                                  # ホームディレクトリへ (venv は不要)
-npx create-agent-chat-app --project-name my-chat-ui   # 初回のみ・数分かかります
-cd ~/my-chat-ui
-pnpm install                                          # 初回のみ
-pnpm dev                                              # UI を起動 (ポート 3000)
+npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager npm --framework nextjs --include-agent react --install-deps true   # 初回のみ・数分かかります
+cd ~/my-chat-ui/apps/web                              # UI (web) のディレクトリへ
+npm run dev                                           # UI を起動 (ポート 3000)
 ```
+
+> **起動するのは `apps/web` だけです。** ルート (`~/my-chat-ui`) で `npm run dev` すると、使わない
+> 同梱 Agent Server (`apps/agents`) も起動して `ERR_PACKAGE_PATH_NOT_EXPORTED` が出ます
+> (理由は第6章 6-B の README と同じ)。
 
 #### ブラウザ: UI を開いて接続する
 
@@ -153,7 +162,7 @@ pnpm dev                                              # UI を起動 (ポート 
 
    | 設定項目 | 入力する値 |
    |---|---|
-   | **Deployment URL** | 【ターミナル 1】に表示された **Tunnel の URL**。`--tunnel` を使わない場合は、Web Preview で**ポート 2024** を公開した URL |
+   | **Deployment URL** | 【ターミナル 1】の **`🚀 API:` に表示された URL** (`https://....trycloudflare.com`)。Web Preview (ポート 2024) の URL は**使えません** |
    | **Graph ID** | `helpdesk` (`langgraph.json` の `graphs` のキー) |
    | **LangSmith API キー** | (空欄で可。ローカル Agent Server への接続では不要) |
 
@@ -253,7 +262,7 @@ CLI 版の実行末尾に表示される検証シートを、LangSmith のトレ
 | Agent Chat UI で承認ダイアログが出ない | `agent.py` の ops_agent に HITL を付けたか。`langgraph dev` でサーバーが起動しているか |
 | サブが呼ばれない / 呼び分けが変 | `@tool` の description が具体的か (TODO②)。supervisor の system_prompt の振り分け指示を確認 |
 | サブが「対応しました」だけ返す | サブの system_prompt に「結果は必ず最終メッセージに含める」を書いたか (TODO①) |
-| UI から Agent Server に繋がらない | Deployment URL に `http://localhost:2024` を入れていないか。Tunnel URL (またはポート 2024 の Web Preview URL) を使う。Graph ID は `helpdesk` か |
+| UI から Agent Server に繋がらない (`Failed to connect...`) | Deployment URL に `http://localhost:2024` や Web Preview (ポート 2024) の URL を入れていないか。`--tunnel` で発行された `https://....trycloudflare.com` を使う。Graph ID は `helpdesk` か |
 | `langgraph: command not found` | venv が有効か (`(.venv)` 表示)。`pip install -U "langgraph-cli[inmem]"` を実行したか |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置きます。

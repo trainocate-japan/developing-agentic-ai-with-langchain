@@ -156,7 +156,7 @@ CLI で学んだ承認フローを、業務ユーザーに見せられる**ブ�
 | | **【ターミナル 1】** | **【ターミナル 2】** |
 |---|---|---|
 | 用意のしかた | **パート 1 で使ったターミナルをそのまま使う** | ツールバーの **[+]** で**新しく開く** |
-| 作業ディレクトリ | `chap06/exercise/solution` (`langgraph.json` がある場所) | `~` (ホームディレクトリ) |
+| 作業ディレクトリ | `chap06/exercise/solution` (`langgraph.json` がある場所) | `~` → `~/my-chat-ui/apps/web` |
 | venv | 有効化済み (`(.venv)` が付いている) | **不要** (Node.js のコマンドしか使わないため) |
 | 役割 | **Agent Server (`langgraph dev`) を起動しっぱなしにする** | **Agent Chat UI を起動しっぱなしにする** |
 
@@ -172,21 +172,45 @@ langgraph dev --tunnel
 - `langgraph dev` は `langgraph.json` を読むので、**`chap06/exercise/solution` にいることが必須**です。
 - `langgraph: command not found` になる場合は `pip install -U "langgraph-cli[inmem]"`
   (`requirements.txt` にも含めてあります)。
-- `--tunnel` を付けると、ローカルの Agent Server に**外から到達できる公開 URL** が発行されます
+- `--tunnel` を付けると、ローカルの Agent Server に**外から到達できる公開 URL**
+  (`https://....trycloudflare.com`) が発行され、**API の URL がその公開 URL に置き換わります**
   (次の「接続設定」で必要になります)。
 
-起動すると次のような出力が出ます。**Tunnel の URL をコピー**しておき、
+起動すると、まず Cloudflare Tunnel のログが数十行流れ、最後に次のバナーが出ます。
+**`🚀 API:` の行の URL をコピー**しておき、
 **このターミナルは `Ctrl+C` で止めるまでそのまま**にします。
 
 ```
-- API: http://127.0.0.1:2024
-- Tunnel: https://xxxxxxxx.trycloudflare.com     <- これをコピー
-- API Docs: http://127.0.0.1:2024/docs
+INFO:langgraph_api.cli:Starting Cloudflare Tunnel...
+INFO:langgraph_api.tunneling.cloudflare:[cloudflared] ... Requesting new quick Tunnel on trycloudflare.com...
+    (Cloudflare のログが数十行流れます)
+
+        Welcome to
+
+╦  ┌─┐┌┐┌┌─┐╔═╗┬─┐┌─┐┌─┐┬ ┬
+║  ├─┤││││ ┬║ ╦├┬┘├─┤├─┘├─┤
+╩═╝┴ ┴┘└┘└─┘╚═╝┴└─┴ ┴┴  ┴ ┴
+
+- 🚀 API: https://compatibility-offerings-bite-measured.trycloudflare.com     <- これをコピー
+- 🎨 Studio UI: https://smith.langchain.com/studio/?baseUrl=https://compatibility-offerings-bite-measured.trycloudflare.com
+- 📚 API Docs: https://compatibility-offerings-bite-measured.trycloudflare.com/docs
 ```
 
-> **`--tunnel` を使わない場合**は、Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で
-> ポート **2024** を公開し、開いたタブの URL (`https://2024-....cloudshell.dev`) を
-> Deployment URL に使ってください。
+> **`API` と `Tunnel` が 2 行並んで表示されるわけではありません。** `--tunnel` を付けると
+> **`🚀 API:` の行そのものが Tunnel の URL** (`https://....trycloudflare.com`) になります
+> (付けない場合は `🚀 API: http://127.0.0.1:2024` と表示されます)。
+> ランダムな英単語をつないだ URL で、**起動するたびに変わります**。
+> 途中に流れる Cloudflare のログの枠囲みにも同じ URL が出ますが、
+> **バナーの `🚀 API:` の行をコピーすれば OK** です。
+
+> **⚠ Cloud Shell の [ウェブでプレビュー] でポート 2024 を公開した URL は使えません。**
+> その URL (`https://2024-cs-....cloudshell.dev`) は「HTTPS 経由で**あなたのユーザーアカウントのみ**に
+> アクセスを制限する」仕様のため
+> ([公式ドキュメント](https://cloud.google.com/shell/docs/using-web-preview))、
+> **別サイトである Agent Chat UI からの API 呼び出しは認証で弾かれ**、
+> `Failed to connect to LangGraph server` になります。
+> Agent Server の公開には**必ず `--tunnel` を使ってください**
+> (Web Preview を使うのは、【ターミナル 2】の UI をポート 3000 で開くときだけです)。
 
 #### ターミナル 2: Agent Chat UI を起動する (ここで新しく開く)
 
@@ -196,15 +220,32 @@ langgraph dev --tunnel
 
 ```bash
 cd ~                                                  # (1) ホームディレクトリへ
-npx create-agent-chat-app --project-name my-chat-ui   # (2) UI を生成 (初回のみ・数分かかります)
-cd ~/my-chat-ui                                       # (3) 生成された UI のディレクトリへ
-pnpm install                                          # (4) 依存をインストール (初回のみ)
-pnpm dev                                              # (5) UI を起動 (ポート 3000)
+npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager npm --framework nextjs --include-agent react --install-deps true   # (2) UI を生成 + 依存インストール (初回のみ・数分かかります)
+cd ~/my-chat-ui/apps/web                              # (3) UI (web) のディレクトリへ
+npm run dev                                           # (4) UI を起動 (ポート 3000)
 ```
+
+> **(2) でオプションを全部渡しているのは、対話の選択プロンプトを出さないためです。**
+> 何も付けずに `npx create-agent-chat-app` を実行すると、パッケージマネージャ・フレームワーク・
+> 同梱エージェントを対話で選ぶことになります。上のコマンドはその選択を指定済みなので、
+> 貼るだけで最後まで進みます。
+>
+> - `--package-manager npm` … Cloud Shell に**最初から入っている npm** を使います。
+>   pnpm を選ぶと `pnpm: command not found` になり、`corepack enable` 等の追加作業が必要です。
+> - `--include-agent react` … 同梱の TypeScript サンプルエージェントは**この研修では使いません**が、
+>   選択プロンプトを省くために 1 つだけ指定しています。
+>
+> **(3) で `apps/web` に入るのが重要です。** 生成されるプロジェクトは
+> `apps/web` (UI) と `apps/agents` (同梱サンプルの Agent Server) の 2 つに分かれており、
+> ルート (`~/my-chat-ui`) で `npm run dev` すると**両方**起動します。このとき `apps/agents` 側が
+> `Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './stream' is not defined ...`
+> というエラーを出します (同梱テンプレート側のバージョン不整合。UI 自体は動きますが紛らわしい)。
+> **この研修の Agent Server は【ターミナル 1】の Python 側**なので `apps/agents` は不要です。
+> `apps/web` で起動すれば、このエラーは出ません。
 
 **このターミナルも `Ctrl+C` で止めるまでそのまま**にします。
 
-> 2 回目以降は (2) と (4) は不要で、`cd ~/my-chat-ui && pnpm dev` だけで起動できます。
+> 2 回目以降は (2) は不要で、`cd ~/my-chat-ui/apps/web && npm run dev` だけで起動できます。
 > **手早く試すだけなら**、この【ターミナル 2】の作業をすべて省略し、ホステッド版
 > <https://agentchat.vercel.app> をブラウザで開いても構いません。
 
@@ -219,19 +260,27 @@ UI を開くと接続設定の入力画面が出ます。次の 3 項目を入�
 
 | 設定項目 | 入力する値 | 補足 |
 |---|---|---|
-| **Deployment URL** | 【ターミナル 1】に表示された **Tunnel の URL** (`https://xxxxxxxx.trycloudflare.com`) | `--tunnel` を使わない場合はポート 2024 の Web Preview URL |
+| **Deployment URL** | 【ターミナル 1】の **`🚀 API:` に表示された URL** (`https://xxxxxxxx.trycloudflare.com`) | Web Preview (ポート 2024) の URL は**使えません** |
 | **Graph ID** | `helpdesk` | `langgraph.json` の `graphs` のキー |
 | **LangSmith API キー** | (空欄で可) | **ローカルサーバー接続時は不要**。LangSmith 上のデプロイ済みエージェントに接続するときだけ使う |
 
 > **`http://localhost:2024` は入力しても繋がりません。** Agent Chat UI は**あなたのブラウザの中**で
 > 動いており、そこから見た `localhost` は「Cloud Shell」ではなく「あなたの PC」を指すためです。
-> 必ず **Cloud Shell の外から到達できる URL** (Tunnel URL またはポート 2024 の Web Preview URL) を
-> 入力してください。
+> 必ず **`--tunnel` で発行された `https://....trycloudflare.com`** (【ターミナル 1】の `🚀 API:` の行) を
+> 入力してください。Cloud Shell の Web Preview (ポート 2024) の URL も、
+> あなたのアカウントでの認証が必要なため UI からは接続できません。
 
 ### ブラウザで承認フローを操作する
 
-接続できたら、チャット欄に **「私 (emp-sato) のパスワードをリセットして」** と入力します。
+接続できたら、チャット欄に **「社員 ID emp-sato のパスワードをリセットしてください」** と入力します。
 エージェントが `reset_password` を呼ぼうとした瞬間に interrupt が発生し、画面に**承認ダイアログ**が現れます。
+
+> **依頼文には社員 ID を入れてください。** 「私のパスワードをリセットして」のように ID が曖昧だと、
+> モデルが本人確認の聞き返しや案内文で会話を終えてしまい、`reset_password` が呼ばれません
+> (= interrupt が起きず、承認ダイアログも出ません)。`agent.py` の `SYSTEM_PROMPT` には
+> 「聞き返しで代替せず `reset_password` を必ず呼ぶ」という指示を入れてありますが、
+> 入力側でも ID を明示するのが確実です。**呼ぶかどうかをモデルの遠慮に任せない**——
+> 実行の可否は承認フローで人間が決める、というのが HITL の設計思想です (CLI 版と同じ)。
 
 ```text
 ┌──────────────────────────────────────────────┐
@@ -274,8 +323,12 @@ CLI で `Command(resume={"decisions": [...]})` を打って行った操作と**�
 | `ModuleNotFoundError: helpdesk_tools` | このディレクトリから実行しているか (`agent.py` と同じ場所に `helpdesk_tools.py` がある) |
 | interrupt 後に再開できずエラー | **CLI 版**は checkpointer を渡したか (TODO②)。再開時の `thread_id` が中断時と同じか |
 | Agent Chat UI で承認ダイアログが出ない | 【ターミナル 1】で `langgraph dev` が起動したままか。Graph ID が `helpdesk` か |
-| UI から Agent Server に繋がらない | Deployment URL に `http://localhost:2024` を入れていないか。Tunnel URL (またはポート 2024 の Web Preview URL) を使う |
+| ダイアログが出ず「承認が必要です」と**文章で**返る | 依頼文に社員 ID を入れたか (例: 社員 ID emp-sato のパスワードをリセットしてください)。`agent.py` の `SYSTEM_PROMPT` に「聞き返しで代替せず `reset_password` を必ず呼ぶ」指示があるか |
+| `Failed to connect to LangGraph server` と出る | Deployment URL に `http://localhost:2024` や Web Preview の URL (`https://2024-cs-....cloudshell.dev`) を入れていないか。`--tunnel` で発行された `https://....trycloudflare.com` を使う |
+| Tunnel の URL が見つからない | 出力の **`🚀 API:` の行**がそれ (`--tunnel` を付け忘れると `http://127.0.0.1:2024` になる)。起動のたびに URL は変わる |
 | `langgraph: command not found` | `pip install -U "langgraph-cli[inmem]"` を実行したか (仮想環境を有効化しているか) |
+| `pnpm: command not found` (UI 側) | UI の生成で `--package-manager npm` を指定したか (pnpm で生成した場合は `corepack enable && corepack prepare pnpm@latest --activate` が必要) |
+| UI 起動時に `ERR_PACKAGE_PATH_NOT_EXPORTED` | `~/my-chat-ui/apps/web` で `npm run dev` したか (ルートで実行すると、使わない同梱 Agent Server も起動してこのエラーが出る) |
 | メールが redact されない | 入力に半角のメール形式 (`name@example.com`) が含まれているか |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置き、
