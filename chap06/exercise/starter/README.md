@@ -227,24 +227,34 @@ INFO:langgraph_api.tunneling.cloudflare:[cloudflared] ... Requesting new quick T
 
 ```bash
 cd ~                                                  # (1) ホームディレクトリへ
-npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager npm --framework nextjs --include-agent react --install-deps true   # (2) UI を生成 + 依存インストール (初回のみ・数分かかります)
-cd ~/my-chat-ui/apps/web                              # (3) UI (web) のディレクトリへ
-npm run dev                                           # (4) UI を起動 (ポート 3000)
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # (2) pnpm 取得時の確認 (Y/n) を省く
+corepack enable                                       # (3) pnpm を使えるようにする (初回のみ)
+corepack prepare pnpm@latest --activate               # (4) pnpm 本体を取得 (初回のみ)
+npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager pnpm --framework nextjs --include-agent memory --install-deps true   # (5) UI を生成 + 依存インストール (初回のみ・数分かかります)
+cd ~/my-chat-ui/apps/web                              # (6) UI (web) のディレクトリへ
+pnpm dev                                              # (7) UI を起動 (ポート 3000)
 ```
 
-> **(2) でオプションを全部渡しているのは、対話の選択プロンプトを出さないためです。**
+> **(2)〜(4) は pnpm を使えるようにする準備です。** Cloud Shell に pnpm は入っていませんが、
+> Node.js 同梱の **corepack** で有効化できます (`pnpm: command not found` はこれを飛ばしたとき)。
+> `COREPACK_ENABLE_DOWNLOAD_PROMPT=0` は、pnpm 本体を取得するときに出る確認
+> (`? Do you want to continue? [Y/n]`) を省くための設定です。
+>
+> **(5) でオプションを全部渡しているのは、対話の選択プロンプトを出さないためです。**
 > 何も付けずに `npx create-agent-chat-app` を実行すると、パッケージマネージャ・フレームワーク・
 > 同梱エージェントを対話で選ぶことになります。上のコマンドはその選択を指定済みなので、
 > 貼るだけで最後まで進みます。
 >
-> - `--package-manager npm` … Cloud Shell に**最初から入っている npm** を使います。
->   pnpm を選ぶと `pnpm: command not found` になり、`corepack enable` 等の追加作業が必要です。
-> - `--include-agent react` … 同梱の TypeScript サンプルエージェントは**この研修では使いません**が、
->   選択プロンプトを省くために 1 つだけ指定しています。
+> - `--package-manager pnpm` … **npm を指定すると依存のインストールに失敗します。**
+>   同梱サンプル (`apps/agents`) が使う `better-sqlite3` の対応バージョンがパッケージ間で
+>   食い違っており、peer 依存を厳密に解決する npm は `npm error code ERESOLVE` で止まります。
+>   pnpm はこの食い違いを警告にとどめて先へ進むため、そのままインストールできます。
+> - `--include-agent memory` … 同梱の TypeScript サンプルエージェントは**この研修では使いません**が、
+>   選択プロンプトを省くために、追加依存がいちばん少ない Memory Agent を 1 つだけ指定しています。
 >
-> **(3) で `apps/web` に入るのが重要です。** 生成されるプロジェクトは
+> **(6) で `apps/web` に入るのが重要です。** 生成されるプロジェクトは
 > `apps/web` (UI) と `apps/agents` (同梱サンプルの Agent Server) の 2 つに分かれており、
-> ルート (`~/my-chat-ui`) で `npm run dev` すると**両方**起動します。このとき `apps/agents` 側が
+> ルート (`~/my-chat-ui`) で `pnpm dev` すると**両方**起動します。このとき `apps/agents` 側が
 > `Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './stream' is not defined ...`
 > というエラーを出します (同梱テンプレート側のバージョン不整合。UI 自体は動きますが紛らわしい)。
 > **この研修の Agent Server は【ターミナル 1】の Python 側**なので `apps/agents` は不要です。
@@ -252,7 +262,7 @@ npm run dev                                           # (4) UI を起動 (ポー
 
 **このターミナルも `Ctrl+C` で止めるまでそのまま**にします。
 
-> 2 回目以降は (2) は不要で、`cd ~/my-chat-ui/apps/web && npm run dev` だけで起動できます。
+> 2 回目以降は (2)〜(5) は不要で、`cd ~/my-chat-ui/apps/web && pnpm dev` だけで起動できます。
 > **手早く試すだけなら**、この【ターミナル 2】の作業をすべて省略し、ホステッド版
 > <https://agentchat.vercel.app> をブラウザで開いても構いません。
 
@@ -317,8 +327,10 @@ UI を開くと接続設定の入力画面が出ます。次の 3 項目を入�
 | `Failed to connect to LangGraph server` と出る | Deployment URL に `http://localhost:2024` や Web Preview の URL (`https://2024-cs-....cloudshell.dev`) を入れていないか。`--tunnel` で発行された `https://....trycloudflare.com` を使う |
 | Tunnel の URL が見つからない | 出力の **`🚀 API:` の行**がそれ (`--tunnel` を付け忘れると `http://127.0.0.1:2024` になる)。起動のたびに URL は変わる |
 | `langgraph: command not found` | `pip install -U "langgraph-cli[inmem]"` を実行したか (仮想環境を有効化しているか) |
-| `pnpm: command not found` (UI 側) | UI の生成で `--package-manager npm` を指定したか (pnpm で生成した場合は `corepack enable && corepack prepare pnpm@latest --activate` が必要) |
-| UI 起動時に `ERR_PACKAGE_PATH_NOT_EXPORTED` | `~/my-chat-ui/apps/web` で `npm run dev` したか (ルートで実行すると、使わない同梱 Agent Server も起動してこのエラーが出る) |
+| `pnpm: command not found` | UI 生成の手順 (3)(4) の `corepack` 2 行を実行したか (Cloud Shell に pnpm は同梱されていない) |
+| UI 生成が `npm error code ERESOLVE` で止まる | `--package-manager npm` で生成していないか。手順どおり `pnpm` を指定する (同梱サンプルの依存が npm の厳密な peer 解決と噛み合わない) |
+| `next: command not found` | 依存インストールが失敗している。`cd ~/my-chat-ui && pnpm install` をやり直してから `apps/web` で `pnpm dev` |
+| UI 起動時に `ERR_PACKAGE_PATH_NOT_EXPORTED` | `~/my-chat-ui/apps/web` で `pnpm dev` したか (ルートで実行すると、使わない同梱 Agent Server も起動してこのエラーが出る) |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置き、
 > リポジトリに含めるのは値の入っていないルートの `.env.example` (ひな形) だけです。

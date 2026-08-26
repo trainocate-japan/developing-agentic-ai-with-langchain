@@ -111,12 +111,14 @@ Tunnel の URL です (`--tunnel` を付けると API の URL がそのまま公
 
 ```bash
 cd ~                                                  # ホームディレクトリへ (venv は不要)
-npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager npm --framework nextjs --include-agent react --install-deps true   # 6-B で作成済みならこの行は不要
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # ↓ 6-B で作成済みなら、この行から 3 行は不要
+corepack enable && corepack prepare pnpm@latest --activate
+npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager pnpm --framework nextjs --include-agent memory --install-deps true
 cd ~/my-chat-ui/apps/web                              # UI (web) のディレクトリへ
-npm run dev                                           # UI を起動 (ポート 3000)
+pnpm dev                                              # UI を起動 (ポート 3000)
 ```
 
-> **起動するのは `apps/web` だけです。** ルート (`~/my-chat-ui`) で `npm run dev` すると、使わない
+> **起動するのは `apps/web` だけです。** ルート (`~/my-chat-ui`) で `pnpm dev` すると、使わない
 > 同梱 Agent Server (`apps/agents`) も起動して `ERR_PACKAGE_PATH_NOT_EXPORTED` が出ます
 > (理由は第6章 6-B の README と同じ)。
 
