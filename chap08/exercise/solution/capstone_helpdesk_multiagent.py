@@ -115,6 +115,10 @@ ops_agent = create_agent(
         "あなたは社内 IT ヘルプデスクのオペレーション担当です。"
         "チケット起票には create_ticket、パスワードリセット依頼には reset_password を使います。"
         "これらは副作用のある操作で、人間のオペレーターの承認を得てから実行されます。"
+        # ↓ 依頼を聞き返しや案内で済ませるとツールが呼ばれず、承認フローに入れない。
+        "依頼を受けたら本人確認の聞き返しや代替案内で済ませず、依頼文に書かれた社員 ID を"
+        "employee_id に渡して該当ツールを必ず呼び出してください "
+        "(実行の可否は承認フローで人間が判断します)。"
         "実行結果 (チケット番号や仮パスワードの案内など) は必ずあなたの最終メッセージに"
         "含めてください (supervisor はあなたの最終メッセージしか見ません)。"
     ),
@@ -192,22 +196,38 @@ def build_supervisor():
     )
 
 
-def print_interrupt(result) -> None:
+def print_interrupt(result) -> bool:
     """interrupt の中身 (action_requests) を取り出して表示する。
 
-    version="v2" で invoke すると、戻り値は .interrupts 属性を持つ。
-    その中の value["action_requests"] に「何のツールが・どんな引数で呼ばれようと
-    しているか」が、value["review_configs"] に「許された決定タイプ」が入っている。
+    version="v2" で invoke すると、戻り値は GraphOutput になり、状態は .value に、
+    中断情報は .interrupts に分かれて入る。
+    .interrupts は Interrupt のタプルで、value["action_requests"] に「何のツールが・
+    どんな引数 (args) で呼ばれようとしているか」が、value["review_configs"] に
+    「許された決定タイプ」が入っている。
+
+    中断が起きたら True、起きずに完走していたら False を返す。
     """
+    # 承認対象のツールが呼ばれなければ interrupt は起きず、.interrupts は空タプルのまま
+    # 完走する。確認せずに [0] を取ると IndexError になるので、原因が読める形で切り分ける。
+    if not result.interrupts:
+        print("\n[注意] interrupt が発生しませんでした (result.interrupts が空)。")
+        print("       ops_agent の承認対象ツール (reset_password / create_ticket) が")
+        print("       呼ばれないまま完走しています。supervisor の最終メッセージ:")
+        print(f"       {result.value['messages'][-1].content}")
+        print("       → supervisor / ops_agent の system_prompt を見直す。")
+        return False
+
     print("\n--- 承認待ち (interrupt) の中身 ---")
     interrupt = result.interrupts[0]  # 今回は 1 件なので先頭を読む
     payload = interrupt.value  # dict: action_requests / review_configs を持つ
     for req in payload["action_requests"]:
+        # 引数のキーは "args" (dict)。"arguments" ではない点に注意。
         print(f"  ツール名 : {req['name']}")
-        print(f"  引数     : {req['arguments']}")
+        print(f"  引数     : {req['args']}")
     for cfg in payload["review_configs"]:
         print(f"  許可された決定: {cfg['allowed_decisions']}")
     print("-" * 36)
+    return True
 
 
 def scenario_faq(supervisor) -> None:
@@ -222,7 +242,8 @@ def scenario_faq(supervisor) -> None:
         version="v2",
     )
     print("[supervisor の最終回答]")
-    print(result["messages"][-1].content)
+    # version="v2" の戻り値は GraphOutput。状態は .value から取り出す。
+    print(result.value["messages"][-1].content)
     print("  → faq_agent が search_faq を呼び、VPN 手順が返れば成功です。")
     print("  → このシナリオは副作用がないため interrupt は発生しません。\n")
 
@@ -238,15 +259,16 @@ def scenario_reset_with_approval(supervisor) -> None:
     #    呼ぼうとした瞬間、HITL の interrupt で実行が止まる。
     #    version="v2" を付けることで、戻り値が .interrupts 属性を持つ形式になる。
     result = supervisor.invoke(
-        {"messages": [{"role": "user", "content": "私 (emp-sato) のパスワードをリセットして"}]},
+        {"messages": [{"role": "user", "content": "社員 ID emp-sato のパスワードをリセットしてください"}]},
         config=config,
         version="v2",
     )
 
     # 2) 止まった内容 (action_requests) を読み解いて表示する。
     #    ops_agent (サブグラフ) 内で起きた interrupt が、supervisor の checkpointer 経由で
-    #    ここまで伝播してきている点に注目。
-    print_interrupt(result)
+    #    ここまで伝播してきている点に注目。中断していなければここで打ち切る。
+    if not print_interrupt(result):
+        return
 
     # 3) approve で再開する。decisions は止まっている tool call と同じ順序で並べる。
     #    今回は 1 件なので 1 要素。type="approve" で「そのまま実行」。
@@ -258,7 +280,7 @@ def scenario_reset_with_approval(supervisor) -> None:
         version="v2",
     )
     print("\n[supervisor の最終回答]")
-    print(final["messages"][-1].content)
+    print(final.value["messages"][-1].content)
     print("  → reset_password が実行され、仮パスワードを含む案内が返れば成功です。\n")
 
 

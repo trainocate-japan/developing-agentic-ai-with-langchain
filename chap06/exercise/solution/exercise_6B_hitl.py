@@ -52,6 +52,11 @@ SYSTEM_PROMPT = (
     "社員からの問い合わせに、丁寧かつ簡潔に答えてください。"
     "やり方の質問には FAQ 検索ツール (search_faq)、稼働状況の質問には get_system_status を使います。"
     "チケットの起票が必要なら create_ticket、パスワードのリセット依頼には reset_password を使います。"
+    # ↓ ここが HITL 演習の生命線。モデルが FAQ 案内や聞き返しで済ませてしまうと
+    #   副作用ツールが呼ばれず、interrupt が起きない (= 承認フローに入れない)。
+    "パスワードのリセットを依頼されたら、search_faq での案内や本人確認の聞き返しで代替せず、"
+    "依頼文に書かれた社員 ID を employee_id に渡して reset_password を必ず呼び出してください。"
+    "実行してよいかどうかは人間のオペレーターが承認フローで判断するので、あなたが遠慮する必要はありません。"
 )
 
 
@@ -100,24 +105,41 @@ def build_agent():
     return agent
 
 
-def print_interrupt(result):
+def print_interrupt(result) -> bool:
     """[解答③] interrupt の中身 (action_requests) を取り出して表示する。
 
-    version="v2" で invoke すると、戻り値は .interrupts 属性を持つ。
-    その中の value["action_requests"] に「何のツールが・どんな引数で呼ばれようと
-    しているか」が、value["review_configs"] に「許された決定タイプ」が入っている。
+    version="v2" で invoke すると、戻り値は GraphOutput になり、状態は .value に、
+    中断情報は .interrupts に分かれて入る。
+    .interrupts は Interrupt のタプルで、value["action_requests"] に「何のツールが・
+    どんな引数 (args) で呼ばれようとしているか」が、value["review_configs"] に
+    「許された決定タイプ」が入っている。
+
+    中断が起きたら True、起きずに完走していたら False を返す。
     """
+    # 承認対象のツールが呼ばれなければ interrupt は起きず、.interrupts は空タプルのまま
+    # エージェントが完走する。ここを確認せずに [0] を取ると IndexError になるので、
+    # 「なぜ止まらなかったのか」が分かる形で切り分ける。
+    if not result.interrupts:
+        print("\n[注意] interrupt が発生しませんでした (result.interrupts が空)。")
+        print("       承認対象のツール (reset_password / create_ticket) が呼ばれないまま")
+        print("       エージェントが完走しています。エージェントの最終メッセージ:")
+        print(f"       {result.value['messages'][-1].content}")
+        print("       → SYSTEM_PROMPT の指示やユーザー発話を見直す。")
+        return False
+
     print("\n--- 承認待ち (interrupt) の中身 ---")
     # result.interrupts は Interrupt のタプル。今回は 1 件なので先頭を読む。
     interrupt = result.interrupts[0]
     payload = interrupt.value  # dict: action_requests / review_configs を持つ
 
     for req in payload["action_requests"]:
+        # 引数のキーは "args" (dict)。"arguments" ではない点に注意。
         print(f"  ツール名 : {req['name']}")
-        print(f"  引数     : {req['arguments']}")
+        print(f"  引数     : {req['args']}")
     for cfg in payload["review_configs"]:
         print(f"  許可された決定: {cfg['allowed_decisions']}")
     print("-" * 36)
+    return True
 
 
 def run_approve_flow(agent):
@@ -133,13 +155,15 @@ def run_approve_flow(agent):
     # 1) ユーザー発話で invoke。reset_password が呼ばれると interrupt で停止する。
     #    version="v2" を付けることで、戻り値が .interrupts 属性を持つ形式になる。
     result = agent.invoke(
-        {"messages": [{"role": "user", "content": "私 (emp-sato) のパスワードをリセットして"}]},
+        {"messages": [{"role": "user", "content": "社員 ID emp-sato のパスワードをリセットしてください"}]},
         config=config,
         version="v2",
     )
 
     # 2) [解答③] 停止した内容 (action_requests) を読み解いて表示する。
-    print_interrupt(result)
+    #    中断していなければ再開すべき地点がないので、ここで打ち切る。
+    if not print_interrupt(result):
+        return
 
     # ==================================================================
     # [解答④-A] approve で再開する
@@ -154,7 +178,8 @@ def run_approve_flow(agent):
     )
 
     print("\n[最終回答]")
-    print(final["messages"][-1].content)
+    # version="v2" の戻り値は GraphOutput。状態は .value から取り出す。
+    print(final.value["messages"][-1].content)
     print("  → reset_password が実行され、仮パスワードを含む案内が返れば成功です。\n")
 
 
@@ -169,13 +194,14 @@ def run_reject_flow(agent):
 
     # 1) 同じ依頼で invoke。やはり reset_password で interrupt して停止する。
     result = agent.invoke(
-        {"messages": [{"role": "user", "content": "私 (emp-sato) のパスワードをリセットして"}]},
+        {"messages": [{"role": "user", "content": "社員 ID emp-sato のパスワードをリセットしてください"}]},
         config=config,
         version="v2",
     )
 
-    # 2) [解答③] 停止内容を表示する。
-    print_interrupt(result)
+    # 2) [解答③] 停止内容を表示する。中断していなければここで打ち切る。
+    if not print_interrupt(result):
+        return
 
     # ==================================================================
     # [解答④-B] reject で再開する (message 付き)
@@ -207,7 +233,8 @@ def run_reject_flow(agent):
     )
 
     print("\n[最終回答]")
-    print(final["messages"][-1].content)
+    # version="v2" の戻り値は GraphOutput。状態は .value から取り出す。
+    print(final.value["messages"][-1].content)
     print("  → reset_password は実行されず、本人手続きを促す代替案内が返れば成功です。\n")
 
 

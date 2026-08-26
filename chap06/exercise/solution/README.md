@@ -89,11 +89,27 @@ python exercise_6B_hitl.py
 |---|---|---|
 | **①** `interrupt_on` のポリシー設計 | `HumanInTheLoopMiddleware(interrupt_on={...})` | `create_ticket`=approve/edit/reject、`reset_password`=approve/reject のみ、`get_system_status`=`False` (承認不要) |
 | **②** checkpointer の設定 | HITL に必須の checkpointer + thread_id | `create_agent(..., checkpointer=InMemorySaver())`。invoke 時に `config={"configurable": {"thread_id": ...}}` |
-| **③** interrupt 情報の取得 | `action_requests` を読み解く | `version="v2"` で invoke → `result.interrupts[0].value["action_requests"]` (および `["review_configs"]`) を読む |
+| **③** interrupt 情報の取得 | `action_requests` を読み解く | `version="v2"` で invoke → `result.interrupts[0].value["action_requests"]` (および `["review_configs"]`) を読む。各要素の引数キーは **`args`** |
 | **④** approve / reject で再開 | `Command(resume=...)` の 2 パターン | approve: `Command(resume={"decisions": [{"type": "approve"}]})` / reject: `{"type": "reject", "message": "..."}` |
 
 > **`version="v2"` は必須**です。これを付けることで、invoke の戻り値が `.interrupts` 属性を持つ形式になります。
 > CLI 版・Agent Chat UI 版とも、interrupt の取得と `Command(resume=...)` での再開はこの形に従います。
+
+> **`version="v2"` の戻り値は `GraphOutput`** です。状態は `.value`、中断情報は `.interrupts` に
+> 分かれて入ります (最終回答は `final.value["messages"][-1].content`)。
+> `action_requests` の引数キーは **`args`** です (`arguments` ではありません)。
+
+### 想定どおり動かないとき: `result.interrupts` が空
+
+`result.interrupts` は**中断が起きなかった場合は空タプル**です。モデルが `reset_password` を呼ばず、
+`search_faq` の案内や本人確認の聞き返しで会話を完結させてしまうと、承認フローに入らないまま完走します
+(この状態で `result.interrupts[0]` を読むと `IndexError: tuple index out of range` になります)。
+
+配布コードは空タプルを検出して原因を表示するようになっています。表示が出た場合は、
+`SYSTEM_PROMPT` の「リセット依頼では必ず `reset_password` を呼ぶ」という指示と、
+ユーザー発話に社員 ID が含まれているかを確認してください。
+**副作用ツールを「呼ぶかどうか」をモデルの遠慮に任せない**——実行の可否は承認フローで人間が決める、
+というのが HITL の設計思想です。
 
 ### 期待される動作
 

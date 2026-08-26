@@ -87,11 +87,27 @@ python exercise_6B_hitl.py
 |---|---|---|
 | **①** `interrupt_on` のポリシー設計 | `HumanInTheLoopMiddleware(interrupt_on={...})` を埋める | **ツール名ごとにポリシーを書く。承認不要は `False`**。`create_ticket`=approve/edit/reject、`reset_password`=approve/reject のみ、`get_system_status`=`False` |
 | **②** checkpointer の設定 | `create_agent(...)` に checkpointer を足す | **checkpointer を忘れると interrupt 後に再開できません** (第4章の復習)。`checkpointer=InMemorySaver()` を引数に追加。invoke 時の `config={"configurable": {"thread_id": ...}}` は配布済み |
-| **③** interrupt 情報の取得 | `print_interrupt` の中で `action_requests` を取り出す | `version="v2"` で invoke 済み → `result.interrupts[0]` を取り、その `.value` (dict) から `action_requests` / `review_configs` を読む |
+| **③** interrupt 情報の取得 | `print_interrupt` の中で `action_requests` を取り出す | `version="v2"` で invoke 済み → `result.interrupts[0]` を取り、その `.value` (dict) から `action_requests` / `review_configs` を読む。引数キーは **`args`** |
 | **④** approve / reject で再開 | `Command(resume=...)` の invoke を 2 つ書く | **decisions のリストは止まっている tool call と同じ順序**。approve: `{"type": "approve"}` / reject: `{"type": "reject", "message": "<理由>"}` |
 
 > **`version="v2"` は配布済み**です (invoke にすでに付いています)。これにより戻り値が `.interrupts` を持ちます。
 > TODO③・④はこの形を前提にしています。
+
+> **`version="v2"` の戻り値は `GraphOutput`** です。状態は `.value`、中断情報は `.interrupts` に
+> 分かれて入ります (最終回答は `final.value["messages"][-1].content`)。
+> `action_requests` の引数キーは **`args`** です (`arguments` ではありません)。
+
+### 想定どおり動かないとき: `result.interrupts` が空
+
+`result.interrupts` は**中断が起きなかった場合は空タプル**です。モデルが `reset_password` を呼ばず、
+`search_faq` の案内や本人確認の聞き返しで会話を完結させてしまうと、承認フローに入らないまま完走します
+(この状態で `result.interrupts[0]` を読むと `IndexError: tuple index out of range` になります)。
+
+配布コードは空タプルを検出して原因を表示するようになっています。表示が出た場合は、
+`SYSTEM_PROMPT` の「リセット依頼では必ず `reset_password` を呼ぶ」という指示と、
+ユーザー発話に社員 ID が含まれているかを確認してください。
+**副作用ツールを「呼ぶかどうか」をモデルの遠慮に任せない**——実行の可否は承認フローで人間が決める、
+というのが HITL の設計思想です。
 
 ### つまずきポイントを「あえて」体験する
 
