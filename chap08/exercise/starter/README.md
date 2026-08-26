@@ -193,20 +193,21 @@ langgraph dev --tunnel
 #### ターミナル 2: Agent Chat UI を起動する (ここで新しく開く)
 
 ツールバーの **[+]** で新しいターミナルタブを開き、次を実行します
-(第6章 6-B で `~/my-chat-ui` を作成済みなら、2〜4 行目は不要です)。
+(第6章 6-B で `~/agent-chat-ui` を用意済みなら、2〜4 行目と `pnpm install` は不要です)。
 
 ```bash
 cd ~                                                  # ホームディレクトリへ (venv は不要)
-export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # ↓ 6-B で作成済みなら、この行から 3 行は不要
-corepack enable && corepack prepare pnpm@latest --activate
-npx create-agent-chat-app@latest --project-name my-chat-ui --package-manager pnpm --framework nextjs --include-agent memory --install-deps true
-cd ~/my-chat-ui/apps/web                              # UI (web) のディレクトリへ
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # ↓ 6-B で用意済みなら、この行から 3 行は不要
+corepack enable
+git clone https://github.com/langchain-ai/agent-chat-ui.git
+cd ~/agent-chat-ui                                    # UI のディレクトリへ
+pnpm install                                          # 6-B で実行済みなら不要
 pnpm dev                                              # UI を起動 (ポート 3000)
 ```
 
-> **起動するのは `apps/web` だけです。** ルート (`~/my-chat-ui`) で `pnpm dev` すると、使わない
-> 同梱 Agent Server (`apps/agents`) も起動して `ERR_PACKAGE_PATH_NOT_EXPORTED` が出ます
-> (理由は第6章 6-B の README と同じ)。
+> **`npx create-agent-chat-app` で作った UI は使いません。** 生成されるテンプレートは
+> LangChain 1.x の承認要求 (`action_requests` / `review_configs`) を認識できず、
+> 承認ダイアログが出ないためです (理由は第6章 6-B の README と同じ)。
 
 #### ブラウザ: UI を開いて接続する
 
