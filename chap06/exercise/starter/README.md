@@ -158,16 +158,16 @@ CLI で学んだ承認フローを、業務ユーザーに見せられる**ブ�
 
 ### 起動から接続までの手順 (Google Cloud Shell)
 
-ここからは **ターミナルを 2 つ**使います。**新しく開くのは 1 つだけ**です。
+使うターミナルは **1 つだけ**です。**UI はブラウザで開くだけなので、インストールは要りません。**
 
-| | **【ターミナル 1】** | **【ターミナル 2】** |
+| | **【ターミナル】** | **【ブラウザ】** |
 |---|---|---|
-| 用意のしかた | **パート 1 で使ったターミナルをそのまま使う** | ツールバーの **[+]** で**新しく開く** |
-| 作業ディレクトリ | `chap06/exercise/starter` (`langgraph.json` がある場所) | `~` → `~/agent-chat-ui` |
-| venv | 有効化済み (`(.venv)` が付いている) | **不要** (Node.js のコマンドしか使わないため) |
-| 役割 | **Agent Server (`langgraph dev`) を起動しっぱなしにする** | **Agent Chat UI を起動しっぱなしにする** |
+| 用意のしかた | **パート 1 で使ったターミナルをそのまま使う** | 新しいタブを開くだけ |
+| 作業ディレクトリ | `chap06/exercise/starter` (`langgraph.json` がある場所) | — |
+| venv | 有効化済み (`(.venv)` が付いている) | — |
+| 役割 | **Agent Server (`langgraph dev`) を起動しっぱなしにする** | **Agent Chat UI (ホステッド版) を開く** |
 
-#### ターミナル 1: Agent Server (`langgraph dev`) を起動する
+#### ターミナル: Agent Server (`langgraph dev`) を起動する
 
 パート 1 の続きなので、**追加の `cd` や venv 有効化は不要**です。
 (ターミナルを開き直してしまった場合は、上の「セットアップ」の 4 行を先に実行してください)
@@ -217,46 +217,20 @@ INFO:langgraph_api.tunneling.cloudflare:[cloudflared] ... Requesting new quick T
 > **別サイトである Agent Chat UI からの API 呼び出しは認証で弾かれ**、
 > `Failed to connect to LangGraph server` になります。
 > Agent Server の公開には**必ず `--tunnel` を使ってください**
-> (Web Preview を使うのは、【ターミナル 2】の UI をポート 3000 で開くときだけです)。
+> (Web Preview を使うのは、UI をローカルに立てた場合にポート 3000 を開くときだけです)。
 
-#### ターミナル 2: Agent Chat UI を起動する (ここで新しく開く)
+#### ブラウザ: Agent Chat UI を開く
 
-ツールバーの **[+]** で**新しいターミナルタブを開き**、次を上から順に実行します。
-新しいタブはホームディレクトリで開きます。**UI はリポジトリの中ではなくホームに作ります**
-(リポジトリを汚さないため)。このターミナルでは **venv の有効化は不要**です。
+ブラウザの新しいタブで **<https://agentchat.vercel.app>** を開きます。
+LangChain 公式がホスティングしている Agent Chat UI で、**インストールも起動も不要**です。
 
-```bash
-cd ~                                                  # (1) ホームディレクトリへ
-export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # (2) pnpm 取得時の確認 (Y/n) を省く
-corepack enable                                       # (3) pnpm を使えるようにする (初回のみ)
-git clone https://github.com/langchain-ai/agent-chat-ui.git   # (4) UI を取得 (初回のみ)
-cd ~/agent-chat-ui                                    # (5) UI のディレクトリへ
-pnpm install                                          # (6) 依存をインストール (初回のみ・数分かかります)
-pnpm dev                                              # (7) UI を起動 (ポート 3000)
-```
-
-> **(2)(3) は pnpm を使えるようにする準備です。** Cloud Shell に pnpm は入っていませんが、
-> Node.js 同梱の **corepack** で有効化できます (`pnpm: command not found` はこれを飛ばしたとき)。
-> Agent Chat UI は `package.json` で pnpm を指定しているため、pnpm でインストールします。
-> `COREPACK_ENABLE_DOWNLOAD_PROMPT=0` は、pnpm 本体を取得するときに出る確認
-> (`? Do you want to continue? [Y/n]`) を省くための設定です。
+> **これは「公式サイトに自分のエージェントを繋ぐ」のではありません。** Agent Chat UI は
+> **あなたのブラウザの中だけで動く**アプリで、そこから【ターミナル】の Tunnel URL に直接つなぎます。
+> 会話の中身が LangChain 側のサーバーを経由することはありません。
 >
-> **`npx create-agent-chat-app` は使いません。** この生成コマンドが配るテンプレートは少し古く、
-> LangChain 1.x の承認要求 (`action_requests` / `review_configs`) を認識できません。
-> そのため**承認ダイアログが出ず、interrupt の中身が JSON のまま表示されます**。
-> 上のように公式リポジトリを clone した最新版なら、この形式に対応しています。
-
-**このターミナルも `Ctrl+C` で止めるまでそのまま**にします。
-
-> 2 回目以降は (4)(6) は不要で、`cd ~/agent-chat-ui && pnpm dev` だけで起動できます。
-> **手早く試すだけなら**、この【ターミナル 2】の作業をすべて省略し、ホステッド版
-> <https://agentchat.vercel.app> をブラウザで開いても構いません
-> (ホステッド版も最新版なので、承認ダイアログは正しく表示されます)。
-
-#### ブラウザ: Web Preview で UI を開く
-
-Cloud Shell 上部ツールバーの **[ウェブでプレビュー]** アイコン → **[ポートを変更]** で
-**3000** を指定して開きます。Agent Chat UI の画面が新しいタブで表示されます。
+> **UI を自分の環境に立てたい場合**は、この節の最後の
+> 「補足: Agent Chat UI をローカルに立てたい場合」を参照してください
+> (オープンソースなので改造もできます)。研修を進めるだけならホステッド版で十分です。
 
 ### 接続設定は 3 項目だけ
 
@@ -264,13 +238,13 @@ UI を開くと接続設定の入力画面が出ます。次の 3 項目を入�
 
 | 設定項目 | 入力する値 | 補足 |
 |---|---|---|
-| **Deployment URL** | 【ターミナル 1】の **`🚀 API:` に表示された URL** (`https://xxxxxxxx.trycloudflare.com`) | Web Preview (ポート 2024) の URL は**使えません** |
+| **Deployment URL** | 【ターミナル】の **`🚀 API:` に表示された URL** (`https://xxxxxxxx.trycloudflare.com`) | Web Preview (ポート 2024) の URL は**使えません** |
 | **Graph ID** | `helpdesk` | `langgraph.json` の `graphs` のキー |
 | **LangSmith API キー** | (空欄で可) | **ローカルサーバー接続時は不要** |
 
 > **`http://localhost:2024` は入力しても繋がりません。** Agent Chat UI は**あなたのブラウザの中**で
 > 動いており、そこから見た `localhost` は「Cloud Shell」ではなく「あなたの PC」を指すためです。
-> 必ず **`--tunnel` で発行された `https://....trycloudflare.com`** (【ターミナル 1】の `🚀 API:` の行) を
+> 必ず **`--tunnel` で発行された `https://....trycloudflare.com`** (【ターミナル】の `🚀 API:` の行) を
 > 入力してください。Cloud Shell の Web Preview (ポート 2024) の URL も、
 > あなたのアカウントでの認証が必要なため UI からは接続できません。
 
@@ -289,6 +263,38 @@ UI を開くと接続設定の入力画面が出ます。次の 3 項目を入�
 
 > **以降の章でもこの UI を使います。** 第7・8章でも `langgraph dev` + Agent Chat UI でエージェントを操作し、
 > 最終章では「Web UI から操作できるヘルプデスク・マルチエージェント」として完成させます。
+
+### 補足: Agent Chat UI をローカルに立てたい場合
+
+Agent Chat UI はオープンソースなので、**自社向けに改造する前提**ならローカルに立てられます
+(研修を進めるだけならホステッド版で十分です。**この節は飛ばして構いません**)。
+ツールバーの **[+]** で新しいターミナルタブを開き、次を実行します。
+
+```bash
+cd ~                                                  # (1) ホームディレクトリへ
+export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # (2) pnpm 取得時の確認 (Y/n) を省く
+corepack enable                                       # (3) pnpm を使えるようにする (Cloud Shell に pnpm は無い)
+git clone https://github.com/langchain-ai/agent-chat-ui.git   # (4) UI を取得
+cd ~/agent-chat-ui                                    # (5) UI のディレクトリへ
+sed -i 's|const nextConfig = {|const nextConfig = {\n  allowedDevOrigins: ["*.cloudshell.dev"],|' next.config.mjs   # (6) 下記の理由で必須
+pnpm install                                          # (7) 依存をインストール (数分かかります)
+pnpm dev                                              # (8) UI を起動 (ポート 3000)
+```
+
+起動したら、Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で **3000** を開きます
+(接続設定の 3 項目はホステッド版と同じです)。
+
+> **(6) の 1 行を飛ばすと画面が正常に表示されません。** Next.js の開発サーバーは、
+> 起動したホスト名以外からのアクセスを既定でブロックします
+> ([`allowedDevOrigins`](https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins))。
+> Cloud Shell の Web Preview は `3000-cs-....cloudshell.dev` という**別ホスト名**で届くため、
+> そのままでは `Blocked cross-origin request to Next.js dev resource /_next/...` が大量に出て、
+> JavaScript が読み込めず画面が壊れます。上の `sed` は `next.config.mjs` に
+> `allowedDevOrigins: ["*.cloudshell.dev"]` を追加して、これを許可する 1 行です。
+>
+> **`npx create-agent-chat-app` は使いません。** この生成コマンドが配るテンプレートは少し古く、
+> LangChain 1.x の承認要求 (`action_requests` / `review_configs`) を認識できないため、
+> **承認ダイアログが出ず、interrupt の中身が JSON のまま表示されます**。
 
 ---
 
@@ -309,14 +315,14 @@ UI を開くと接続設定の入力画面が出ます。次の 3 項目を入�
 | `___` のままでエラー / 構文エラー | TODO①〜④の `___` を実際のコードに置き換えたか |
 | interrupt 後に再開できずエラー | **CLI 版**は checkpointer を渡したか (TODO②)。再開時の `thread_id` が中断時と同じか |
 | `ModuleNotFoundError: helpdesk_tools` | このディレクトリから実行しているか (`helpdesk_tools.py` と同じ場所) |
-| Agent Chat UI で承認ダイアログが出ない | 【ターミナル 1】で `langgraph dev` が起動したままか。Graph ID が `helpdesk` か |
+| Agent Chat UI で承認ダイアログが出ない | 【ターミナル】で `langgraph dev` が起動したままか。Graph ID が `helpdesk` か |
 | ダイアログが出ず「承認が必要です」と**文章で**返る | 依頼文に社員 ID を入れたか (例: 社員 ID emp-sato のパスワードをリセットしてください)。`agent.py` の `SYSTEM_PROMPT` に「聞き返しで代替せず `reset_password` を必ず呼ぶ」指示があるか |
 | `Failed to connect to LangGraph server` と出る | Deployment URL に `http://localhost:2024` や Web Preview の URL (`https://2024-cs-....cloudshell.dev`) を入れていないか。`--tunnel` で発行された `https://....trycloudflare.com` を使う |
 | Tunnel の URL が見つからない | 出力の **`🚀 API:` の行**がそれ (`--tunnel` を付け忘れると `http://127.0.0.1:2024` になる)。起動のたびに URL は変わる |
 | `langgraph: command not found` | `pip install -U "langgraph-cli[inmem]"` を実行したか (仮想環境を有効化しているか) |
-| `pnpm: command not found` | UI 手順の (2)(3) (`export ...` と `corepack enable`) を実行したか (Cloud Shell に pnpm は同梱されていない) |
-| 承認ダイアログの代わりに `action_requests` / `review_configs` が JSON で表示される | `npx create-agent-chat-app` で作った UI を使っていないか。`git clone` した `~/agent-chat-ui` かホステッド版を使う (旧 UI は LangChain 1.x の承認要求形式に未対応) |
-| `next: command not found` | 依存のインストールが終わっていない。`~/agent-chat-ui` で `pnpm install` をやり直す |
+| 承認ダイアログの代わりに `action_requests` / `review_configs` が JSON で表示される | 古い UI を使っていないか (`npx create-agent-chat-app` で生成した UI は LangChain 1.x の承認要求形式に未対応)。ホステッド版か、補足の手順で clone した `~/agent-chat-ui` を使う |
+| (ローカル版) `Blocked cross-origin request ...` が大量に出て画面が壊れる | 補足の (6) の `sed` (`allowedDevOrigins` の追加) を実行してから `pnpm dev` を再起動したか |
+| (ローカル版) `pnpm: command not found` | 補足の (2)(3) の `corepack` 2 行を実行したか (Cloud Shell に pnpm は同梱されていない) |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置き、
 > リポジトリに含めるのは値の入っていないルートの `.env.example` (ひな形) だけです。

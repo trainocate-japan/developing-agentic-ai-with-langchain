@@ -94,7 +94,7 @@ pip install -r requirements.txt             # (4) 依存をインストール (�
 TODO に入る前に、「手動確認」を 1 回だけ体験しておきます。第6章の演習と同じ手順で
 `langgraph dev` を起動し、Agent Chat UI から v4 に 1 ケース聞いてみてください。
 
-**【ターミナル 1】** (= セットアップで使ったターミナル) で、`chap07/exercise/starter`
+**【ターミナル】** (= セットアップで使ったターミナル) で、`chap07/exercise/starter`
 (`langgraph.json` がある場所) にいることを確認してから起動します。
 
 ```bash
@@ -106,29 +106,15 @@ Tunnel の URL です (`--tunnel` を付けると API の URL がそのまま公
 **Cloud Shell の Web Preview でポート 2024 を公開した URL は、認証で弾かれるため使えません**
 (理由は第6章 6-B の README を参照)。
 
-**【ターミナル 2】** をツールバーの **[+]** で新しく開き、Agent Chat UI を起動します
-(詳しい手順・接続設定は第6章 演習 6-B の README「起動から接続までの手順」と同じです)。
+**UI はブラウザで開くだけ**です。新しいタブで **<https://agentchat.vercel.app>**
+(LangChain 公式がホスティングする Agent Chat UI) を開きます。インストールも起動も要りません
+(詳しい説明・接続設定は第6章 演習 6-B の README「起動から接続までの手順」と同じです)。
 
-```bash
-cd ~                                                  # ホームディレクトリへ (venv は不要)
-export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # ↓ 6-B で用意済みなら、この行から 3 行は不要
-corepack enable
-git clone https://github.com/langchain-ai/agent-chat-ui.git
-cd ~/agent-chat-ui                                    # UI のディレクトリへ
-pnpm install                                          # 6-B で実行済みなら不要
-pnpm dev                                              # UI を起動 (ポート 3000)
-```
-
-> **`npx create-agent-chat-app` で作った UI は使いません。** 生成されるテンプレートは
-> LangChain 1.x の承認要求 (`action_requests` / `review_configs`) を認識できず、
-> 承認ダイアログが出ないためです (理由は第6章 6-B の README と同じ)。
-
-Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で **3000** を開き、
 接続設定に次を入力します。
 
 | 設定項目 | 入力する値 |
 |---|---|
-| **Deployment URL** | 【ターミナル 1】の **`🚀 API:` に表示された URL** (`https://xxxxxxxx.trycloudflare.com`) |
+| **Deployment URL** | 【ターミナル】の **`🚀 API:` に表示された URL** (`https://xxxxxxxx.trycloudflare.com`) |
 | **Graph ID** | `helpdesk` |
 | **LangSmith API キー** | (空欄で可) |
 

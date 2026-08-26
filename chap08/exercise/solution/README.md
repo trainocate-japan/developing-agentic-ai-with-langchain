@@ -107,17 +107,17 @@ python capstone_helpdesk_multiagent.py
 
 ### 2. Web アプリとして完成 (Agent Chat UI / langgraph dev) ← 本コースの最終成果物
 
-CLI 版で仕組みを理解したら、同じ supervisor を Web UI から動かします。ここでは
-**ターミナルを 2 つ**使います (第6章 演習 6-B とまったく同じ流れです)。
+CLI 版で仕組みを理解したら、同じ supervisor を Web UI から動かします。使うターミナルは
+**1 つだけ**で、**UI はブラウザで開くだけ**です (第6章 演習 6-B とまったく同じ流れです)。
 
-| | **【ターミナル 1】** | **【ターミナル 2】** |
+| | **【ターミナル】** | **【ブラウザ】** |
 |---|---|---|
-| 用意のしかた | **CLI 版で使ったターミナルをそのまま使う** | ツールバーの **[+]** で**新しく開く** |
-| 作業ディレクトリ | `chap08/exercise/solution` (`langgraph.json` がある場所) | `~` (ホームディレクトリ) |
-| venv | 有効化済み (`(.venv)` が付いている) | **不要** (Node.js のコマンドしか使わないため) |
-| 役割 | **Agent Server を起動しっぱなしにする** | **Agent Chat UI を起動しっぱなしにする** |
+| 用意のしかた | **CLI 版で使ったターミナルをそのまま使う** | 新しいタブを開くだけ |
+| 作業ディレクトリ | `chap08/exercise/solution` (`langgraph.json` がある場所) | — |
+| venv | 有効化済み (`(.venv)` が付いている) | — |
+| 役割 | **Agent Server を起動しっぱなしにする** | **Agent Chat UI (ホステッド版) を開く** |
 
-#### ターミナル 1: Agent Server を起動する
+#### ターミナル: Agent Server を起動する
 
 CLI 版の続きなので、**追加の `cd` や venv 有効化は不要**です
 (ターミナルを開き直した場合は「セットアップ」の 4 行を先に実行してください)。
@@ -137,35 +137,16 @@ langgraph dev --tunnel
 > あなたのユーザーアカウントでの認証が必要な URL のため、Agent Chat UI からの呼び出しは弾かれます
 > (詳細は第6章 6-B の README)。
 
-#### ターミナル 2: Agent Chat UI を起動する (ここで新しく開く)
+#### ブラウザ: Agent Chat UI を開いて接続する
 
-ツールバーの **[+]** で新しいターミナルタブを開き、次を実行します
-(第6章 6-B で `~/agent-chat-ui` を用意済みなら、2〜4 行目と `pnpm install` は不要です)。
-
-```bash
-cd ~                                                  # ホームディレクトリへ (venv は不要)
-export COREPACK_ENABLE_DOWNLOAD_PROMPT=0              # ↓ 6-B で用意済みなら、この行から 3 行は不要
-corepack enable
-git clone https://github.com/langchain-ai/agent-chat-ui.git
-cd ~/agent-chat-ui                                    # UI のディレクトリへ
-pnpm install                                          # 6-B で実行済みなら不要
-pnpm dev                                              # UI を起動 (ポート 3000)
-```
-
-> **`npx create-agent-chat-app` で作った UI は使いません。** 生成されるテンプレートは
-> LangChain 1.x の承認要求 (`action_requests` / `review_configs`) を認識できず、
-> 承認ダイアログが出ないためです (理由は第6章 6-B の README と同じ)。
-
-#### ブラウザ: UI を開いて接続する
-
-1. Cloud Shell の **[ウェブでプレビュー] → [ポートを変更]** で **3000** を指定して開きます。
-   (【ターミナル 2】をまるごと省略し、ホステッド版
-   [Agent Chat UI](https://agentchat.vercel.app) をブラウザで開いてもかまいません)
+1. ブラウザの新しいタブで **<https://agentchat.vercel.app>** を開きます
+   (LangChain 公式がホスティングする Agent Chat UI。**インストールも起動も不要**です。
+   UI をローカルに立てたい場合は第6章 6-B の README の補足を参照)。
 2. 接続設定に次の 3 項目を入力します。
 
    | 設定項目 | 入力する値 |
    |---|---|
-   | **Deployment URL** | 【ターミナル 1】の **`🚀 API:` に表示された URL** (`https://....trycloudflare.com`)。Web Preview (ポート 2024) の URL は**使えません** |
+   | **Deployment URL** | 【ターミナル】の **`🚀 API:` に表示された URL** (`https://....trycloudflare.com`)。Web Preview (ポート 2024) の URL は**使えません** |
    | **Graph ID** | `helpdesk` (`langgraph.json` の `graphs` のキー) |
    | **LangSmith API キー** | (空欄で可。ローカル Agent Server への接続では不要) |
 
