@@ -7,7 +7,7 @@
 仕上げに pytest 統合 (`@pytest.mark.langsmith`) での実行も試します。
 
 > **この章のキーメッセージ**: エージェントの評価は、まったく新しい基盤をゼロから覚えることでは
-> ありません。第4章でトレーシングのために設定済みの **LangSmith** と、使い慣れた **pytest** の上に、
+> ありません。第4章でトレーシングのために設定済みの **LangSmith** の上に、
 > 「LLM 特有の採点方法 (LLM-as-a-judge など)」を載せるだけです。
 
 **所要時間の目安: 40 分** (講師と一緒に進めます)
@@ -23,7 +23,7 @@ hands-on/
 ├── weather_agent.py     # 配布: 評価対象の天気エージェント (通常版 / 劣化版プロンプト)
 ├── create_dataset.py    # ステップ1: Dataset 作成 (client.create_dataset / create_examples)
 ├── run_evaluation.py    # ステップ2〜4: evaluator 3 本 + client.evaluate (--degraded で劣化版)
-└── test_weather_eval.py # ステップ5: pytest 統合 (@pytest.mark.langsmith)
+└── test_weather_eval.py # オプション: pytest 統合 (@pytest.mark.langsmith)
 ```
 
 | ファイル | 何をするか | 観察するポイント |
@@ -119,7 +119,7 @@ Experiment を作成しました: weather-agent-v1-xxxxxxxx
 
 ### ステップ 4 (前半): Experiment 画面で結果を読む (④)
 
-表示された URL をブラウザで開き、次を確認します。
+表示された URL から LangSmith の Experiment 画面をブラウザで開き、次を確認します。
 
 - Example ごとに **Inputs / Reference Output / Outputs** とスコア 3 列
   (`correctness` / `conciseness` / `trajectory_strict_match`) が表で並ぶこと
@@ -147,7 +147,13 @@ python run_evaluation.py --degraded
 
 これが教科書冒頭の「プロンプトを直したら別のケースが壊れた」を**リリース前に捕まえる**画面です。
 
-### ステップ 5: pytest 統合で実行する (⑤)
+### ステップ 5: 講師デモ (コードなし)
+
+続けて講師が、**オンライン評価** (Tracing Project への自動ルール設定)・**Multi-turn Evals**
+(Thread = 会話単位の評価) の画面を紹介します。
+手元での操作はありません。
+
+### オプション: pytest 統合で実行する (⑤)
 
 ```bash
 pytest test_weather_eval.py --langsmith-output
@@ -159,14 +165,6 @@ pytest test_weather_eval.py --langsmith-output
   それ自体が「評価をテストに変換するとはどういうことか」の教材です)
 - 使い分けの目安: **CI で毎コミット回すなら pytest 統合、Dataset を中心に複数バージョンを
   じっくり比較するなら `client.evaluate`** (教科書 7-3)。
-
-### ステップ 6: 講師デモ (コードなし)
-
-続けて講師が、**オンライン評価** (Tracing Project への自動ルール設定)・**Multi-turn Evals**
-(Thread = 会話単位の評価)・**Insights** (本番トレースの自動分析) の画面を紹介します。
-手元での操作はありません。オフライン評価 (リリース前) とオンライン評価 (本番監視) が
-改善ループとして噛み合う全体像は、教科書 7-3 を参照してください。
-
 ---
 
 ## コードリーディングのポイント
