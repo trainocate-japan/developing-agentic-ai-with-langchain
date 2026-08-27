@@ -1,17 +1,17 @@
 """agent.py 【正解 (solution)】 — Agent Chat UI / langgraph dev 用のエージェント定義
 
-演習 6-B: Agent Chat UI で承認フローを体験 — ヘルプデスク Step 5
+演習 6-C: Agent Chat UI で承認フローを体験 — ヘルプデスク Step 5
 研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
 ============================================================================
 このファイルは `langgraph dev` が読み込むエージェント定義です。
 トップレベル変数 `agent` を公開し、langgraph.json の graphs から参照させます。
-CLI 版 (exercise_6B_hitl.py) と同じ HITL 承認フローを、ブラウザの Agent Chat UI から
+CLI 版 (exercise_6C_hitl.py) と同じ HITL 承認フローを、ブラウザの Agent Chat UI から
 操作するために使います。
 ============================================================================
 
 【CLI 版との決定的な違い: checkpointer を「コードで渡さない」】
-  CLI 版 (exercise_6B_hitl.py) は、自分のプロセスだけで動く単体スクリプトなので、
+  CLI 版 (exercise_6C_hitl.py) は、自分のプロセスだけで動く単体スクリプトなので、
   HITL に必要な checkpointer を create_agent(checkpointer=InMemorySaver()) と
   「自分で」渡していました。
 

@@ -1,4 +1,4 @@
-"""helpdesk_tools.py — 演習 6-B 用の配布ツール (完成版)
+"""helpdesk_tools.py — 演習 6-C 用の配布ツール (完成版)
 
 研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 

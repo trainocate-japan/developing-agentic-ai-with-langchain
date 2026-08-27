@@ -1,4 +1,4 @@
-# ハンズオン 6-A 依存パッケージ
+# 第6章 ハンズオン (6-A / 6-B) 依存パッケージ
 # 研修基盤に合わせてバージョンをピン留めしています。
 # (本コースの基盤: langchain 1.3 系 / langgraph 1.2 系)
 
@@ -8,3 +8,9 @@ langgraph==1.2.4
 
 # .env から API キーを読み込むため
 python-dotenv
+
+# --- ハンズオン 6-B の Agent Chat UI 版 (langgraph dev) 用 ---
+# langgraph dev コマンド (ローカルの Agent Server) を提供する。
+# [inmem] はインメモリ実行用の追加依存を含む extra。
+# 次のコマンドでも導入できる: pip install -U "langgraph-cli[inmem]"
+langgraph-cli[inmem]

@@ -1,9 +1,9 @@
-# 演習 6-B【正解 (solution)】: 要承認オペレーションの実装 — ヘルプデスク Step 5
+# 演習 6-C【正解 (solution)】: 要承認オペレーションの実装 — ヘルプデスク Step 5
 
 研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
-このディレクトリは演習 6-B の**正解 (solution)** です。
-`exercise_6B_hitl.py` (CLI 版) は TODO がすべて埋まった完成版、`agent.py` + `langgraph.json` は
+このディレクトリは演習 6-C の**正解 (solution)** です。
+`exercise_6C_hitl.py` (CLI 版) は TODO がすべて埋まった完成版、`agent.py` + `langgraph.json` は
 Agent Chat UI からブラウザ操作するための完成版です。
 **まずは `starter/` で自力で挑戦**し、詰まったとき・答え合わせのときにこちらを参照してください。
 
@@ -40,19 +40,19 @@ solution/
 ├── README.md                 # この説明
 ├── requirements.txt          # 依存パッケージ (langgraph-cli[inmem] 含む)
 ├── helpdesk_tools.py         # 配布: search_faq / get_system_status / create_ticket / reset_password
-├── exercise_6B_hitl.py       # CLI 版: HITL 承認フロー (完成版・TODO①〜④ 埋め済み)
+├── exercise_6C_hitl.py       # CLI 版: HITL 承認フロー (完成版・TODO①〜④ 埋め済み)
 ├── agent.py                  # Agent Chat UI 用: langgraph dev が読むエージェント定義
 └── langgraph.json            # graphs にエージェント (helpdesk) を登録
 ```
 
 - `helpdesk_tools.py` の `create_ticket` / `reset_password` は**副作用ありのダミー実装**です
   (本来はチケット管理システム・認証基盤を操作する「やり直しの効かない」処理。研修では print で代用)。
-- `exercise_6B_hitl.py` がターミナルで承認フローを体験する版 (受講者が starter で編集する対象)。
+- `exercise_6C_hitl.py` がターミナルで承認フローを体験する版 (受講者が starter で編集する対象)。
 - `agent.py` + `langgraph.json` がブラウザ (Agent Chat UI) から操作するための版。
 
 ---
 
-## パート 1: CLI 版 `exercise_6B_hitl.py`
+## パート 1: CLI 版 `exercise_6C_hitl.py`
 
 ### 実行
 
@@ -80,7 +80,7 @@ pip install -r requirements.txt             # (4) 依存をインストール (�
 トレースは [smith.langchain.com](https://smith.langchain.com) で確認できます)。
 
 ```bash
-python exercise_6B_hitl.py
+python exercise_6C_hitl.py
 ```
 
 ### TODO①〜④ の解答ポイント
@@ -136,7 +136,7 @@ CLI で学んだ承認フローを、業務ユーザーに見せられる**ブ�
 
 | 実行形態 | checkpointer | 理由 |
 |---|---|---|
-| CLI 版 (`exercise_6B_hitl.py`) | `create_agent(checkpointer=InMemorySaver())` で**自分で渡す** | 単体スクリプトには永続化の担い手がいないため |
+| CLI 版 (`exercise_6C_hitl.py`) | `create_agent(checkpointer=InMemorySaver())` で**自分で渡す** | 単体スクリプトには永続化の担い手がいないため |
 | Agent Chat UI 版 (`agent.py`) | **渡さない** | `langgraph dev` (Agent Server) が永続化をプラットフォーム側で提供するため |
 
 > 公式ドキュメント (LangGraph persistence) の指針: 「Agent Server を使う場合、checkpointer や store を

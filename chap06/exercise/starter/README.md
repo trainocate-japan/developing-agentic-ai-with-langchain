@@ -1,10 +1,15 @@
-# 演習 6-B【演習 (starter)】: 要承認オペレーションの実装 — ヘルプデスク Step 5
+# 演習 6-C【演習 (starter)】: 要承認オペレーションの実装 — ヘルプデスク Step 5
 
 研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
-このディレクトリは演習 6-B の**演習用 (starter)** です。
-`exercise_6B_hitl.py` (CLI 版) の **TODO①〜④** を自分で埋めて完成させてください。
+このディレクトリは演習 6-C の**演習用 (starter)** です。
+`exercise_6C_hitl.py` (CLI 版) の **TODO①〜④** を自分で埋めて完成させてください。
 完成版は `solution/` にあります。まずは自力で挑戦しましょう。
+
+> **手本はハンズオン 6-B にあります。** `interrupt_on` の書き方、`checkpointer` の渡し方、
+> `result.interrupts` の読み方、`Command(resume=...)` の書き方は、経費精算エージェントを題材に
+> `chap06/hands-on/handson_6B_hitl.py` で一度動かしています。手が止まったら、そちらのコードと
+> 実行結果を読み返してください (題材は違いますが、使う API はまったく同じです)。
 
 ---
 
@@ -39,18 +44,18 @@ starter/
 ├── README.md                 # この説明
 ├── requirements.txt          # 依存パッケージ (langgraph-cli[inmem] 含む)
 ├── helpdesk_tools.py         # 配布: search_faq / get_system_status / create_ticket / reset_password (完成)
-├── exercise_6B_hitl.py       # CLI 版: HITL 承認フロー (★TODO①〜④ をあなたが埋める)
+├── exercise_6C_hitl.py       # CLI 版: HITL 承認フロー (★TODO①〜④ をあなたが埋める)
 ├── agent.py                  # Agent Chat UI 用: langgraph dev が読むエージェント定義 (配布・完成)
 └── langgraph.json            # graphs にエージェント (helpdesk) を登録 (配布・完成)
 ```
 
-- あなたが編集するのは **`exercise_6B_hitl.py` の TODO①〜④だけ**です。
+- あなたが編集するのは **`exercise_6C_hitl.py` の TODO①〜④だけ**です。
 - `helpdesk_tools.py` の `create_ticket` / `reset_password` は**副作用ありのダミー実装** (完成済み)。
 - `agent.py` + `langgraph.json` は配布・完成済みです (パート 2 でそのまま使います)。
 
 ---
 
-## パート 1: CLI 版 `exercise_6B_hitl.py` の TODO を埋める
+## パート 1: CLI 版 `exercise_6C_hitl.py` の TODO を埋める
 
 ### 実行
 
@@ -78,7 +83,7 @@ pip install -r requirements.txt             # (4) 依存をインストール (�
 自動で有効。トレースは [smith.langchain.com](https://smith.langchain.com) で確認できます)。
 
 ```bash
-python exercise_6B_hitl.py
+python exercise_6C_hitl.py
 ```
 
 ### TODO①〜④ とヒント
@@ -143,7 +148,7 @@ CLI で学んだ承認フローを、業務ユーザーに見せられる**ブ�
 
 | 実行形態 | checkpointer | 理由 |
 |---|---|---|
-| CLI 版 (`exercise_6B_hitl.py`) | `create_agent(checkpointer=InMemorySaver())` で**自分で渡す** (TODO②) | 単体スクリプトには永続化の担い手がいないため |
+| CLI 版 (`exercise_6C_hitl.py`) | `create_agent(checkpointer=InMemorySaver())` で**自分で渡す** (TODO②) | 単体スクリプトには永続化の担い手がいないため |
 | Agent Chat UI 版 (`agent.py`) | **渡さない** | `langgraph dev` (Agent Server) が永続化をプラットフォーム側で提供するため |
 
 > 公式ドキュメント (LangGraph persistence) の指針: 「Agent Server を使う場合、checkpointer や store を

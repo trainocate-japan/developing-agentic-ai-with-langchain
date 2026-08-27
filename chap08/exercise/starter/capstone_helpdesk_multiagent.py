@@ -64,7 +64,7 @@ MODEL = "openai:gpt-5.4"
 # interrupt_on は「ツール名 → 承認ポリシー」の辞書です。運用要件:
 #   - reset_password … approve / reject のみ (高リスクなので引数の編集 edit は許さない)
 #   - create_ticket  … approve / edit / reject (起票内容の修正も許す)
-# 書き方のヒント (第6章 演習 6-B と同じ API):
+# 書き方のヒント (第6章 演習 6-C と同じ API):
 #   HumanInTheLoopMiddleware(
 #       interrupt_on={
 #           "reset_password": {"allowed_decisions": ["approve", "reject"]},

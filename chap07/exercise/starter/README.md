@@ -104,11 +104,11 @@ langgraph dev --tunnel
 起動後のバナーの **`🚀 API:` の行**に出る URL (`https://....trycloudflare.com`) が
 Tunnel の URL です (`--tunnel` を付けると API の URL がそのまま公開 URL になります)。
 **Cloud Shell の Web Preview でポート 2024 を公開した URL は、認証で弾かれるため使えません**
-(理由は第6章 6-B の README を参照)。
+(理由は第6章 6-C の README を参照)。
 
 **UI はブラウザで開くだけ**です。新しいタブで **<https://agentchat.vercel.app>**
 (LangChain 公式がホスティングする Agent Chat UI) を開きます。インストールも起動も要りません
-(詳しい説明・接続設定は第6章 演習 6-B の README「起動から接続までの手順」と同じです)。
+(詳しい説明・接続設定は第6章 演習 6-C の README「起動から接続までの手順」と同じです)。
 
 接続設定に次を入力します。
 
@@ -119,7 +119,7 @@ Tunnel の URL です (`--tunnel` を付けると API の URL がそのまま公
 | **LangSmith API キー** | (空欄で可) |
 
 > **`http://localhost:2024` では繋がりません。** UI はあなたのブラウザの中で動いているため、
-> そこから見た `localhost` は Cloud Shell ではなくあなたの PC を指します (第6章 6-B と同じ理由)。
+> そこから見た `localhost` は Cloud Shell ではなくあなたの PC を指します (第6章 6-C と同じ理由)。
 
 接続できたら、たとえば **「VPN に繋がらないのですが、どうすればいいですか?」** と入力して
 応答を確認します。

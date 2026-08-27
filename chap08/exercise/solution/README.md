@@ -108,7 +108,7 @@ python capstone_helpdesk_multiagent.py
 ### 2. Web アプリとして完成 (Agent Chat UI / langgraph dev) ← 本コースの最終成果物
 
 CLI 版で仕組みを理解したら、同じ supervisor を Web UI から動かします。使うターミナルは
-**1 つだけ**で、**UI はブラウザで開くだけ**です (第6章 演習 6-B とまったく同じ流れです)。
+**1 つだけ**で、**UI はブラウザで開くだけ**です (第6章 演習 6-C とまったく同じ流れです)。
 
 | | **【ターミナル】** | **【ブラウザ】** |
 |---|---|---|
@@ -135,13 +135,13 @@ langgraph dev --tunnel
 
 > **Cloud Shell の Web Preview でポート 2024 を公開した URL は使えません。**
 > あなたのユーザーアカウントでの認証が必要な URL のため、Agent Chat UI からの呼び出しは弾かれます
-> (詳細は第6章 6-B の README)。
+> (詳細は第6章 6-C の README)。
 
 #### ブラウザ: Agent Chat UI を開いて接続する
 
 1. ブラウザの新しいタブで **<https://agentchat.vercel.app>** を開きます
    (LangChain 公式がホスティングする Agent Chat UI。**インストールも起動も不要**です。
-   UI をローカルに立てたい場合は第6章 6-B の README の補足を参照)。
+   UI をローカルに立てたい場合は第6章 6-C の README の補足を参照)。
 2. 接続設定に次の 3 項目を入力します。
 
    | 設定項目 | 入力する値 |
@@ -189,7 +189,7 @@ interrupt は、**トップレベルの supervisor が持つ checkpointer によ
 
 つまり「**supervisor の 1 つの checkpointer が、入れ子の ops_agent の HITL 中断・再開までまとめて
 面倒を見る**」——これが、checkpointer を supervisor だけに置く理由です。HITL の API
-(`version="v2"` / `result.interrupts` / `Command(resume=...)`) は第6章 演習 6-B と同一です。
+(`version="v2"` / `result.interrupts` / `Command(resume=...)`) は第6章 演習 6-C と同一です。
 
 ---
 

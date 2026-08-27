@@ -1,10 +1,10 @@
-"""exercise_6B_hitl.py 【演習 (starter)】 — CLI 版 HITL 承認フロー
+"""exercise_6C_hitl.py 【演習 (starter)】 — CLI 版 HITL 承認フロー
 
-演習 6-B: 要承認オペレーションの実装 — ヘルプデスク Step 5
+演習 6-C: 要承認オペレーションの実装 — ヘルプデスク Step 5
 研修コース「Agentic AI 開発実践 - LangChain 版」/ 第6章「Middleware と HITL」
 
 ============================================================================
-これは演習 6-B (CLI 版) の「演習用 (starter)」です。
+これは演習 6-C (CLI 版) の「演習用 (starter)」です。
 ファイル内の「TODO①」〜「TODO④」を、あなた自身で埋めて完成させてください。
 完成版が見たくなったら solution/ を参照できますが、まずは自力で挑戦しましょう。
 ============================================================================
@@ -157,7 +157,7 @@ def run_approve_flow(agent):
     print("=" * 70)
 
     # スレッドごとに会話を分けるための thread_id (第4章と同じ作法)。
-    config = {"configurable": {"thread_id": "exercise-6b-approve"}}
+    config = {"configurable": {"thread_id": "exercise-6c-approve"}}
 
     # 1) ユーザー発話で invoke。reset_password が呼ばれると interrupt で停止します。
     #    version="v2" を付けることで、戻り値が .interrupts 属性を持つ形式になります。
@@ -196,7 +196,7 @@ def run_reject_flow(agent):
     print("=" * 70)
 
     # approve とは別スレッドにする (別の会話として扱う)。
-    config = {"configurable": {"thread_id": "exercise-6b-reject"}}
+    config = {"configurable": {"thread_id": "exercise-6c-reject"}}
 
     # 1) 同じ依頼で invoke。やはり reset_password で interrupt して停止します。
     result = agent.invoke(
@@ -241,6 +241,6 @@ if __name__ == "__main__":
     print("まとめ: interrupt_on でツールごとの承認ポリシーを宣言し、")
     print("        checkpointer に保存された状態を Command(resume=...) で再開する。")
     print("        approve で実行・reject で理由付き代替案内、を確認できました。")
-    print("        次は 6-5: agent.py + langgraph.json で、同じフローを")
+    print("        次はパート 2: agent.py + langgraph.json で、同じフローを")
     print("        Agent Chat UI のブラウザ承認ダイアログから操作します。")
     print("=" * 70)

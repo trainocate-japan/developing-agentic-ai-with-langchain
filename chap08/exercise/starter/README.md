@@ -127,7 +127,7 @@ pip install -r requirements.txt             # (4) 依存をインストール (�
 
 ### TODO④: ops_agent 用の `HumanInTheLoopMiddleware` を構成する (`ops_hitl`)
 
-副作用ツールを呼ぶ瞬間に止めて承認を待たせます (第6章 演習 6-B と同じ API)。
+副作用ツールを呼ぶ瞬間に止めて承認を待たせます (第6章 演習 6-C と同じ API)。
 
 - `interrupt_on={"reset_password": {"allowed_decisions": ["approve", "reject"]},
   "create_ticket": {"allowed_decisions": ["approve", "edit", "reject"]}}`
@@ -161,7 +161,7 @@ python capstone_helpdesk_multiagent.py
 ### 2. Web アプリとして完成 (Agent Chat UI / langgraph dev) ← 本コースの最終成果物
 
 CLI 版で仕組みを理解したら、同じ supervisor を Web UI から動かします。使うターミナルは
-**1 つだけ**で、**UI はブラウザで開くだけ**です (第6章 演習 6-B とまったく同じ流れです)。
+**1 つだけ**で、**UI はブラウザで開くだけ**です (第6章 演習 6-C とまったく同じ流れです)。
 
 | | **【ターミナル】** | **【ブラウザ】** |
 |---|---|---|
@@ -188,13 +188,13 @@ langgraph dev --tunnel
 
 > **Cloud Shell の Web Preview でポート 2024 を公開した URL は使えません。**
 > あなたのユーザーアカウントでの認証が必要な URL のため、Agent Chat UI からの呼び出しは弾かれます
-> (詳細は第6章 6-B の README)。
+> (詳細は第6章 6-C の README)。
 
 #### ブラウザ: Agent Chat UI を開いて接続する
 
 1. ブラウザの新しいタブで **<https://agentchat.vercel.app>** を開きます
    (LangChain 公式がホスティングする Agent Chat UI。**インストールも起動も不要**です。
-   UI をローカルに立てたい場合は第6章 6-B の README の補足を参照)。
+   UI をローカルに立てたい場合は第6章 6-C の README の補足を参照)。
 2. 接続設定に次の 3 項目を入力します。
 
    | 設定項目 | 入力する値 |
