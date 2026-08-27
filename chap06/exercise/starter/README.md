@@ -203,9 +203,9 @@ INFO:langgraph_api.tunneling.cloudflare:[cloudflared] ... Requesting new quick T
 ║  ├─┤││││ ┬║ ╦├┬┘├─┤├─┘├─┤
 ╩═╝┴ ┴┘└┘└─┘╚═╝┴└─┴ ┴┴  ┴ ┴
 
-- 🚀 API: https://compatibility-offerings-bite-measured.trycloudflare.com     <- これをコピー
-- 🎨 Studio UI: https://smith.langchain.com/studio/?baseUrl=https://compatibility-offerings-bite-measured.trycloudflare.com
-- 📚 API Docs: https://compatibility-offerings-bite-measured.trycloudflare.com/docs
+- 🚀 API: https://XXXX-XXXX-XXXX.trycloudflare.com     <- これをコピー
+- 🎨 Studio UI: https://smith.langchain.com/studio/?baseUrl=https://XXXX-XXXX-XXXX.trycloudflare.com
+- 📚 API Docs: https://XXXX-XXXX-XXXX.trycloudflare.com/docs
 ```
 
 > **`API` と `Tunnel` が 2 行並んで表示されるわけではありません。** `--tunnel` を付けると
