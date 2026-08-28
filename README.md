@@ -45,7 +45,7 @@
 | `exercise/starter/` | **演習**。`# TODO` のコメント箇所を自分で埋めて完成させる | TODO を実装します |
 | `exercise/solution/` | 演習の **正解**。答え合わせ・詰まったときの参照用 | 自力で挑戦してから見ましょう |
 
-> 第1章は座学中心のため `hands-on/` はなく、環境確認の演習のみです。第8章には討議資料 (`exercise/8C_pattern_selection_discussion.md`) も含まれます。
+> 第1章は座学中心のため `hands-on/` はなく、環境確認の演習のみです。
 
 ---
 
