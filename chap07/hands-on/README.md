@@ -4,13 +4,13 @@
 
 教科書 7-3 で学んだオフライン評価の 4 ステップ——**① Dataset 作成 → ② evaluator 定義 →
 ③ Experiment 実行 → ④ 結果分析**——を、天気エージェントを題材に一通り実行するハンズオンです。
-仕上げに pytest 統合 (`@pytest.mark.langsmith`) での実行も試します。
+pytest 統合 (`@pytest.mark.langsmith`) は**オプション**です (時間が余った場合、または各自の復習用)。
 
 > **この章のキーメッセージ**: エージェントの評価は、まったく新しい基盤をゼロから覚えることでは
 > ありません。第4章でトレーシングのために設定済みの **LangSmith** の上に、
 > 「LLM 特有の採点方法 (LLM-as-a-judge など)」を載せるだけです。
 
-**所要時間の目安: 40 分** (講師と一緒に進めます)
+**所要時間の目安: 15 分** (講師と一緒に進めます。オプションの pytest 統合を除く)
 
 ---
 
@@ -30,7 +30,7 @@ hands-on/
 |---|---|---|
 | `create_dataset.py` | Dataset `weather-agent-evals` と Example 4 件を登録 | UI で Example の inputs / outputs スキーマ |
 | `run_evaluation.py` | correctness / conciseness / trajectory_strict の 3 本で `client.evaluate` | スコア・judge の `comment`・比較ビューの赤/緑 |
-| `test_weather_eval.py` | 同じ evaluator を pytest から実行 | 既存の pytest 資産にそのまま載ること |
+| `test_weather_eval.py` | **(オプション)** 同じ evaluator を pytest から実行 | 既存の pytest 資産にそのまま載ること |
 
 evaluator 3 本の構成 (教科書 7-2 の「何を測るか × どう測るか」):
 
@@ -147,13 +147,10 @@ python run_evaluation.py --degraded
 
 これが教科書冒頭の「プロンプトを直したら別のケースが壊れた」を**リリース前に捕まえる**画面です。
 
-### ステップ 5: 講師デモ (コードなし)
-
-続けて講師が、**オンライン評価** (Tracing Project への自動ルール設定)・**Multi-turn Evals**
-(Thread = 会話単位の評価) の画面を紹介します。
-手元での操作はありません。
-
 ### オプション: pytest 統合で実行する (⑤)
+
+> **このステップはオプションです。** 研修の時間内には実施しません。
+> 時間が余った場合、または各自の復習用として試してください。
 
 ```bash
 pytest test_weather_eval.py --langsmith-output

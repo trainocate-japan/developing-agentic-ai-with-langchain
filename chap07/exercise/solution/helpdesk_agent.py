@@ -8,8 +8,8 @@
 第6章で完成させたヘルプデスクエージェント v4 を引き継ぎ、2 つの役割を提供します。
 
   1. トップレベル変数 `agent` — v4 完成品 (第6章の agent.py と同じ構成)
-       `langgraph dev` が langgraph.json 経由で読み込みます。ステップ 0 の
-       「Agent Chat UI から 1 ケース手動確認」で使います。
+       この演習では実行しません。役割 2 の評価用エージェントと読み比べる
+       ための参照用です (Agent Chat UI は第8章の総合演習で再び使います)。
 
   2. 関数 `build_eval_agent(prompt_version)` — 回帰評価用の Target
        client.evaluate の Target 関数から呼びます。--prompt base / v2 で
@@ -43,15 +43,15 @@ from langchain.agents.middleware import HumanInTheLoopMiddleware, PIIMiddleware
 from helpdesk_tools import create_ticket, get_system_status, reset_password, search_faq
 
 # .env から環境変数を読み込む。
-# (langgraph dev はこの helpdesk_agent.py を import するため、ここで load_dotenv() を
-#  呼べばリポジトリのルートの .env が読み込まれ、OpenAI / LangSmith のキーが供給される)
+# (create_dataset.py / run_regression.py がこのファイルを import したときに load_dotenv() が
+#  走り、リポジトリのルートの .env から OpenAI / LangSmith のキーが供給される)
 load_dotenv()
 
 # モデル名は変数に集約 ("provider:model" 形式)。研修実施時に最新へ差し替える。
 MODEL = "openai:gpt-5.4"
 
 # ----------------------------------------------------------------------
-# 役割 1: v4 完成品 (langgraph dev + Agent Chat UI 用。第6章から引き継ぎ)
+# 役割 1: v4 完成品 (第6章から引き継ぎ。読み比べ用 — この演習では実行しない)
 # ----------------------------------------------------------------------
 
 SYSTEM_PROMPT = (
@@ -78,8 +78,8 @@ hitl = HumanInTheLoopMiddleware(
     },
 )
 
-# トップレベル変数 `agent` として公開する。
-# langgraph.json の graphs ("helpdesk": "./helpdesk_agent.py:agent") がこの変数を参照する。
+# トップレベル変数 `agent` として公開する (第8章の総合演習では、これと同じ形の
+# エージェントを langgraph.json 経由で Agent Chat UI から動かす)。
 # checkpointer を渡さない理由は第6章の演習どおり (Agent Server が永続化を提供する)。
 agent = create_agent(
     model=MODEL,

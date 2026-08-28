@@ -5,7 +5,7 @@
 このディレクトリは演習 7-B の**正解 (solution)** です。`create_dataset.py` (TODO①) と
 `run_regression.py` (TODO②③ + 発展 TODO) がすべて埋まった完成版です。
 **まずは `starter/` で自力で挑戦**し、詰まったとき・答え合わせのときにこちらを参照してください。
-(セットアップ手順・ステップ 0 の UI 手動確認・評価基準は `starter/README.md` と共通です)
+(セットアップ手順・評価基準は `starter/README.md` と共通です)
 
 ---
 
@@ -38,10 +38,9 @@
 ```
 solution/
 ├── README.md            # この説明
-├── requirements.txt     # 依存パッケージ (openevals / langsmith / langgraph-cli 等)
+├── requirements.txt     # 依存パッケージ (openevals / langsmith 等)
 ├── helpdesk_tools.py    # 配布: 第6章から引き継いだ 4 ツール (starter と同一)
 ├── helpdesk_agent.py    # 配布: v4 完成品 + 評価用 build_eval_agent (starter と同一)
-├── langgraph.json       # ステップ 0 用: langgraph dev がエージェントを読み込む
 ├── create_dataset.py    # ステップ 1: Dataset 作成 (完成版・TODO① 埋め済み)
 └── run_regression.py    # ステップ 2〜4: 回帰評価 (完成版・TODO②③ + 発展 埋め済み)
 ```
@@ -110,7 +109,9 @@ v2 プロンプトの変更点は「VPN 問い合わせで稼働状況も案内�
 > 差が出なかったら再実行してみてください。「揺れるからこそ、複数ケースの Dataset で
 > 継続的に測る」——それ自体が本章の学びです。
 
-### 発展: politeness 列
+### 発展 (オプション): politeness 列
+
+> 発展 TODO は**オプション**です。時間に余裕がある場合に取り組んでください。
 
 solution の `run_regression.py` には、発展 TODO の解答例として「応答が丁寧な敬語か」を判定する
 reference-free evaluator (`feedback_key="politeness"`) が入っています。実行すると Experiment 画面に

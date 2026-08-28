@@ -5,7 +5,8 @@
 
 ============================================================================
 これは演習 7-B の「演習用 (starter)」です。
-ファイル内の「TODO②」「TODO③」(と、余力があれば「TODO 発展」) を埋めて完成させてください。
+ファイル内の「TODO②」「TODO③」を埋めて完成させてください。
+(「TODO 発展」はオプションです。研修の時間内には実施しません)
 完成版が見たくなったら solution/ を参照できますが、まずは自力で挑戦しましょう。
 
 ※ このファイルは TODO②③ を埋めるまで動きません (NotImplementedError になります)。
@@ -60,7 +61,8 @@ correctness_evaluator = None  # TODO②: create_llm_as_judge(...) に置き換�
 
 
 # ======================================================================
-# TODO (発展): 独自基準の reference-free evaluator を追加する
+# TODO (発展・オプション): 独自基準の reference-free evaluator を追加する
+# ※ このステップはオプションです。時間に余裕がある場合に取り組んでください。
 # ======================================================================
 # 「応答がビジネスの場にふさわしい敬語であること」のような独自の品質基準も、
 # 採点基準を自然言語で書いたプロンプトを create_llm_as_judge に渡すだけで
@@ -86,7 +88,7 @@ correctness_evaluator = None  # TODO②: create_llm_as_judge(...) に置き換�
 #      model=JUDGE_MODEL) で evaluator にする。
 #   3) 下の politeness_evaluator に代入すると、main() が自動で evaluators に加えます
 #      (feedback_key "politeness" の列が Experiment 画面に増えます)。
-politeness_evaluator = None  # TODO (発展・任意): 独自プロンプトの evaluator に置き換える
+politeness_evaluator = None  # TODO (発展・オプション): 独自プロンプトの evaluator に置き換える
 
 
 def main():

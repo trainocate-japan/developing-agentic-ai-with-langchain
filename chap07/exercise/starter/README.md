@@ -5,7 +5,7 @@
 このディレクトリは演習 7-B の**演習用 (starter)** です。**TODO①②③** (と発展 TODO) を
 自分で埋めて完成させてください。完成版は `solution/` にあります。まずは自力で挑戦しましょう。
 
-**所要時間の目安: 50 分** (発展 TODO を除く)
+**所要時間の目安: 20 分** (オプションの発展 TODO を除く)
 
 ---
 
@@ -32,10 +32,14 @@
 | 第6章 | Middleware / HITL / Agent Chat UI | PII 保護 + 要承認 + ブラウザ操作 (v4) |
 | **第7章 (この演習)** | **評価 (LangSmith オフライン評価)** | **回帰評価つきエージェント: プロンプト修正の前後を Experiment で比較できる** |
 
-> **v4 はそのまま使います。** `helpdesk_agent.py` にはステップ 0 用の v4 完成品 (トップレベル変数
-> `agent`) と、回帰評価用の `build_eval_agent()` (読み取り系 2 ツール・プロンプト切り替え付き) の
+> **v4 はそのまま使います。** `helpdesk_agent.py` には第6章から引き継いだ v4 完成品 (トップレベル変数
+> `agent`・読み比べ用) と、回帰評価用の `build_eval_agent()` (読み取り系 2 ツール・プロンプト切り替え付き) の
 > 両方が入っています。評価用が読み取り系 2 ツール構成である理由 (HITL の interrupt は自動一括評価と
 > 相性が悪い) は、`helpdesk_agent.py` の docstring を読んでください。
+
+> **この演習では Agent Chat UI (`langgraph dev`) は使いません。** 「UI から 1 ケースずつ手で確かめる」
+> やり方は第6章の演習 6-C で体験済みです。この演習はその手動確認を**自動評価に置き換える**のが目的なので、
+> スクリプトの実行だけで完結します。Agent Chat UI は**第8章の総合演習で再び使用**します。
 
 ---
 
@@ -44,16 +48,15 @@
 ```
 starter/
 ├── README.md            # この説明
-├── requirements.txt     # 依存パッケージ (openevals / langsmith / langgraph-cli 等)
+├── requirements.txt     # 依存パッケージ (openevals / langsmith 等)
 ├── helpdesk_tools.py    # 配布: 第6章から引き継いだ 4 ツール (編集不要)
 ├── helpdesk_agent.py    # 配布: v4 完成品 + 評価用 build_eval_agent (編集不要)
-├── langgraph.json       # ステップ 0 用: langgraph dev がエージェントを読み込む
 ├── create_dataset.py    # ステップ 1: Dataset 作成。★TODO① をあなたが埋める
 └── run_regression.py    # ステップ 2〜4: 回帰評価。★TODO②③ (+ 発展 TODO) をあなたが埋める
 ```
 
 - あなたが編集するのは **`create_dataset.py` の TODO①** と **`run_regression.py` の TODO②③**
-  (+ 任意の発展 TODO) だけです。
+  (+ オプションの発展 TODO) だけです。
 - starter は **TODO を埋めるまで動きません** (実行すると NotImplementedError で止まります)。
 
 ---
@@ -86,47 +89,6 @@ pip install -r requirements.txt             # (4) 依存をインストール (�
 > (5-A で設定)。各スクリプトは先頭で `load_dotenv()` を呼び、ルートの `.env` を読み込みます。
 > LangSmith の環境変数 (`LANGSMITH_TRACING` / `LANGSMITH_API_KEY`) は第4章で設定したものが
 > そのまま評価機能の入口になります。
-
----
-
-## ステップ 0 (導入): Agent Chat UI で 1 ケース手動確認
-
-TODO に入る前に、「手動確認」を 1 回だけ体験しておきます。第6章の演習と同じ手順で
-`langgraph dev` を起動し、Agent Chat UI から v4 に 1 ケース聞いてみてください。
-
-**【ターミナル】** (= セットアップで使ったターミナル) で、`chap07/exercise/starter`
-(`langgraph.json` がある場所) にいることを確認してから起動します。
-
-```bash
-langgraph dev --tunnel
-```
-
-起動後のバナーの **`🚀 API:` の行**に出る URL (`https://....trycloudflare.com`) が
-Tunnel の URL です (`--tunnel` を付けると API の URL がそのまま公開 URL になります)。
-**Cloud Shell の Web Preview でポート 2024 を公開した URL は、認証で弾かれるため使えません**
-(理由は第6章 6-C の README を参照)。
-
-**UI はブラウザで開くだけ**です。新しいタブで **<https://agentchat.vercel.app>**
-(LangChain 公式がホスティングする Agent Chat UI) を開きます。インストールも起動も要りません
-(詳しい説明・接続設定は第6章 演習 6-C の README「起動から接続までの手順」と同じです)。
-
-接続設定に次を入力します。
-
-| 設定項目 | 入力する値 |
-|---|---|
-| **Deployment URL** | 【ターミナル】の **`🚀 API:` に表示された URL** (`https://xxxxxxxx.trycloudflare.com`) |
-| **Graph ID** | `helpdesk` |
-| **LangSmith API キー** | (空欄で可) |
-
-> **`http://localhost:2024` では繋がりません。** UI はあなたのブラウザの中で動いているため、
-> そこから見た `localhost` は Cloud Shell ではなくあなたの PC を指します (第6章 6-C と同じ理由)。
-
-接続できたら、たとえば **「VPN に繋がらないのですが、どうすればいいですか?」** と入力して
-応答を確認します。
-
-1 ケースなら簡単です。しかし「プロンプトを 1 行直すたびに、VPN もパスワードも稼働確認も
-全部 UI から打ち直す」のは現実的ではありません。ここから先、この確認を**自動評価**に置き換えます。
-(確認できたら `langgraph dev` は Ctrl+C で止めて構いません)
 
 ---
 
@@ -186,7 +148,10 @@ python run_regression.py --prompt v2
 judge の `comment` から**原因を 1 行で説明**してください。「一部を改善する修正が別のケースを
 僅かに劣化させる」——現実のプロンプト修正で起きるこの現象を捕まえられたら、この演習は合格です。
 
-### ステップ 5 (発展・任意): 独自基準の evaluator を追加する
+### ステップ 5 (オプション): 独自基準の evaluator を追加する
+
+> **このステップはオプションです。** 研修の時間内には実施しません。
+> 時間が余った場合、または各自の復習用として取り組んでください。
 
 「応答がビジネスにふさわしい敬語であること」のような独自基準を、カスタムプロンプトの
 reference-free evaluator として追加します (`run_regression.py` の「TODO 発展」)。
@@ -224,8 +189,6 @@ reference-free evaluator として追加します (`run_regression.py` の「TOD
 | Dataset の Example が 0 件 / スキーマが変 | TODO① の形が `{"inputs": {"question": ...}, "outputs": {"answer": ...}}` になっているか。UI で Dataset を削除して作り直せます |
 | 比較ビューで差が出ない | 2 つの Experiment が同じ Dataset に対するものか。スコアの揺れで差が消えることもあります (再実行してみる) |
 | スコアが実行ごとに変わる | 正常です。エージェントも judge も LLM なので判定は揺れ得ます。だからこそ複数ケースで継続的に測ります |
-| `langgraph: command not found` (ステップ 0) | `pip install -U "langgraph-cli[inmem]"` を実行したか (仮想環境を有効化しているか) |
-| Agent Chat UI から Agent Server に繋がらない (ステップ 0) | Deployment URL に `http://localhost:2024` や Web Preview (ポート 2024) の URL を入れていないか。`--tunnel` で発行された `https://....trycloudflare.com` (出力の `🚀 API:` の行) を使う |
 
 > **`.env` と `__pycache__/` はコミットしないでください。** `.env` はリポジトリのルートに 1 つだけ置き、
 > リポジトリに含めるのは値の入っていないルートの `.env.example` (ひな形) だけです。

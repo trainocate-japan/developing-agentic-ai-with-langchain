@@ -20,9 +20,3 @@ langsmith>=0.3.11
 
 # .env から API キーを読み込むため
 python-dotenv
-
-# --- Agent Chat UI / langgraph dev 用 (ステップ 0) ---
-# langgraph dev コマンド (ローカルの Agent Server) を提供する。
-# [inmem] はインメモリ実行用の追加依存を含む extra。
-# 研修では次のコマンドでも導入できる: pip install -U "langgraph-cli[inmem]"
-langgraph-cli[inmem]

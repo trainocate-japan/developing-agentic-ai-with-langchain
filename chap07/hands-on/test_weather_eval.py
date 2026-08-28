@@ -1,17 +1,19 @@
-"""test_weather_eval.py — ハンズオン 7-A ステップ⑤: pytest 統合 (配布・完成版)
+"""test_weather_eval.py — ハンズオン 7-A オプション: pytest 統合 (配布・完成版)
 
 ハンズオン 7-A: LangSmith のオフライン評価を一通り動かす
 研修コース「Agentic AI 開発実践 - LangChain 版」/ 第7章「エージェントの評価」
 
 ============================================================================
 LangSmith の pytest 統合を体験するテストファイルです。
+**このファイルはオプションです。研修の時間内には実行しません**
+(時間が余った場合、または各自の復習用)。
 
   実行方法:
     pytest test_weather_eval.py --langsmith-output
 
   - @pytest.mark.langsmith を付けたテストは、入出力・参照出力・評価結果が
     LangSmith に記録されます。新しいテストランナーは登場しません——
-    使い慣れた pytest にマーカー 1 つとログ数行を足すだけです。
+    pytest にマーカー 1 つとログ数行を足すだけです。
   - langsmith.testing の t.log_inputs / t.log_outputs / t.log_reference_outputs で
     「何を聞いたか / 何が返ったか / 何が返るべきだったか」を記録します。
   - テスト内で openevals の evaluator を呼ぶと、その結果が feedback として
