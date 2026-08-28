@@ -17,7 +17,7 @@
 - **目標 4** (LangSmith で評価): supervisor → サブエージェントの入れ子をトレースで読む
 - **目標 5** (マルチエージェントの比較・選択・実装): Subagents 型を実装する
 
-最後は `langgraph dev` で起動して **Agent Chat UI (Web Preview) から操作できる Web アプリ**として
+最後は `langgraph dev` で起動して **Agent Chat UI から操作できる Web アプリ**として
 完成させます。これが本コースの最終成果物「**Web UI から操作できるヘルプデスク・マルチエージェント
 (完成版 v5)**」です。
 

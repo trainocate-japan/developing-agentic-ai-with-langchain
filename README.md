@@ -2,7 +2,7 @@
 
 このリポジトリは、研修コース **「Agentic AI 開発実践 - LangChain 版」** (2 日間) のハンズオン・演習用コード一式です。各章のフォルダ (`chap01`〜`chap08`) に、講師と一緒に動かす **ハンズオン** と、自分で完成させる **演習** が入っています。
 
-> 受講者の皆さんがまず読むのがこの README です。**お使いの章が「Google Colab」か「Google Cloud Shell」かを確認** し、該当するセットアップに進んでください。
+> まず読むのがこの README です。**お使いの章が「Google Colab」か「Google Cloud Shell」かを確認** し、該当するセットアップに進んでください。
 
 ---
 
@@ -16,7 +16,7 @@
 | 第5〜8章 | Day 2 | **Google Cloud Shell** | Python スクリプト (`.py`) |
 
 - **第1〜4章 (Colab)**: ブラウザだけで完結します。各章の Notebook を Google Colab で開き、API キーは Colab の **[シークレット]** 機能で管理します。
-- **第5〜8章 (Cloud Shell)**: このリポジトリを `git clone` し、ターミナルで `.py` を実行します。第6章以降は **Agent Chat UI** をブラウザ (Web Preview) で操作します。
+- **第5〜8章 (Cloud Shell)**: このリポジトリを `git clone` し、ターミナルで `.py` を実行します。第6章以降は、LangChain 公式がホスティングする **Agent Chat UI** (<https://agentchat.vercel.app>) をブラウザで開いて操作します (インストール不要)。
 
 ---
 
@@ -99,7 +99,7 @@
 | やりたいこと | 操作 |
 |---|---|
 | **新しいターミナルを開く** | ターミナル上部のツールバーの **[+]** (新しいタブを開く) をクリック |
-| **ブラウザでアプリを開く** (第6・8章) | 上部ツールバーの **[ウェブでプレビュー]** アイコン → **[ポートを変更]** でポート番号を指定 |
+| **ブラウザでアプリを開く** | 上部ツールバーの **[ウェブでプレビュー]** アイコン → **[ポートを変更]** でポート番号を指定。**第6・8章の Agent Chat UI ではこの機能は使いません** (`langgraph dev --tunnel` が発行する URL を使います。詳しくは各章の README) |
 | **ファイルを編集する** | `nano <ファイル名>` (保存 = `Ctrl+O` → `Enter`、終了 = `Ctrl+X`)。または `cloudshell edit <ファイル名>` でエディタが開く |
 
 > **ホームディレクトリの中身 (clone したリポジトリ・`.env`・venv) は保存されますが、
@@ -199,8 +199,8 @@ pip install -r requirements.txt             # ④ 依存をインストール (�
 ## 7. 前提・補足
 
 - **Python**: 3.10 以上 (Colab / Cloud Shell の標準環境で動作します)。
-- **モデル名**: 教材中のモデル名は変数 `MODEL` に集約しています (例 `MODEL = "openai:gpt-5.4"`)。研修実施時には講師が指定する最新のモデル名に読み替えてください。1 箇所を直すだけで全体に反映されます。
-- **主要ライブラリ**: langchain 1.3 系 / langchain-openai / langgraph 1.2 系 / langchain-mcp-adapters (第5章) / openevals (第7章) など。各章の `requirements.txt` に記載しています。研修実施時は再現性のためバージョンのピン留めを推奨します。
+- **モデル名**: 教材中のモデル名は変数 `MODEL` に集約しています (例 `MODEL = "openai:gpt-5.4"`)。研修で案内されるモデル名に読み替えてください。1 箇所を直すだけで全体に反映されます。
+- **主要ライブラリ**: langchain 1.3 系 / langchain-openai / langgraph 1.2 系 / langchain-mcp-adapters (第5章) / openevals (第7章) など。第5〜8章は各章の `requirements.txt` でバージョンを固定しています。
 - **公式ドキュメント**: 現行は [docs.langchain.com](https://docs.langchain.com) です (旧 python.langchain.com はアーカイブ)。変化の速い領域なので、困ったら一次情報を参照する習慣をつけましょう。
 
 ---

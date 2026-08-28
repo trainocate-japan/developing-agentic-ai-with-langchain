@@ -51,8 +51,8 @@ solution/
 ```
 
 - `servers/knowledge_server.py` は**情報システム部門が用意した既製品**という想定の配布物です。
-  FAQ 検索 (`search_faq`) と文書取得 (`get_document`) の 2 ツールを公開します。受講者は編集しません。
-- `exercise_5B_helpdesk.py` がクライアント側 (受講者が starter で編集する対象) です。
+  FAQ 検索 (`search_faq`) と文書取得 (`get_document`) の 2 ツールを公開します。編集する必要はありません。
+- `exercise_5B_helpdesk.py` がクライアント側 (starter で編集する対象) です。
 
 ---
 

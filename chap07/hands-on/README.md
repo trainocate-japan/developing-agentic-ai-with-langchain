@@ -2,15 +2,14 @@
 
 研修コース「Agentic AI 開発実践 - LangChain 版」/ 第7章「エージェントの評価」
 
-教科書 7-3 で学んだオフライン評価の 4 ステップ——**① Dataset 作成 → ② evaluator 定義 →
+オフライン評価の 4 ステップ——**① Dataset 作成 → ② evaluator 定義 →
 ③ Experiment 実行 → ④ 結果分析**——を、天気エージェントを題材に一通り実行するハンズオンです。
-pytest 統合 (`@pytest.mark.langsmith`) は**オプション**です (時間が余った場合、または各自の復習用)。
+pytest 統合 (`@pytest.mark.langsmith`) は**オプション**です (余裕があるとき、または復習用に取り組んでください)。
 
 > **この章のキーメッセージ**: エージェントの評価は、まったく新しい基盤をゼロから覚えることでは
 > ありません。第4章でトレーシングのために設定済みの **LangSmith** の上に、
 > 「LLM 特有の採点方法 (LLM-as-a-judge など)」を載せるだけです。
 
-**所要時間の目安: 15 分** (講師と一緒に進めます。オプションの pytest 統合を除く)
 
 ---
 
@@ -32,7 +31,7 @@ hands-on/
 | `run_evaluation.py` | correctness / conciseness / trajectory_strict の 3 本で `client.evaluate` | スコア・judge の `comment`・比較ビューの赤/緑 |
 | `test_weather_eval.py` | **(オプション)** 同じ evaluator を pytest から実行 | 既存の pytest 資産にそのまま載ること |
 
-evaluator 3 本の構成 (教科書 7-2 の「何を測るか × どう測るか」):
+evaluator 3 本の構成 (「何を測るか × どう測るか」の組み合わせ):
 
 | evaluator | 何を測るか | どう測るか | 参照出力 |
 |---|---|---|---|
@@ -145,12 +144,11 @@ python run_evaluation.py --degraded
 - 「どのケースが・どの評価軸で悪化したか」を特定し、judge の `comment` で原因を読みます
   (conciseness の悪化・trajectory の不一致が典型です)
 
-これが教科書冒頭の「プロンプトを直したら別のケースが壊れた」を**リリース前に捕まえる**画面です。
+これが「プロンプトを直したら別のケースが壊れた」を**リリース前に捕まえる**画面です。
 
 ### オプション: pytest 統合で実行する (⑤)
 
-> **このステップはオプションです。** 研修の時間内には実施しません。
-> 時間が余った場合、または各自の復習用として試してください。
+> **このステップはオプションです。** 余裕があるとき、または復習用として試してください。
 
 ```bash
 pytest test_weather_eval.py --langsmith-output
@@ -161,7 +159,7 @@ pytest test_weather_eval.py --langsmith-output
 - 期待する出力: `2 passed` (judge も LLM なので、まれに判定が揺れて失敗することがあります。
   それ自体が「評価をテストに変換するとはどういうことか」の教材です)
 - 使い分けの目安: **CI で毎コミット回すなら pytest 統合、Dataset を中心に複数バージョンを
-  じっくり比較するなら `client.evaluate`** (教科書 7-3)。
+  じっくり比較するなら `client.evaluate`**。
 ---
 
 ## コードリーディングのポイント

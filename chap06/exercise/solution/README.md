@@ -47,7 +47,7 @@ solution/
 
 - `helpdesk_tools.py` の `create_ticket` / `reset_password` は**副作用ありのダミー実装**です
   (本来はチケット管理システム・認証基盤を操作する「やり直しの効かない」処理。研修では print で代用)。
-- `exercise_6C_hitl.py` がターミナルで承認フローを体験する版 (受講者が starter で編集する対象)。
+- `exercise_6C_hitl.py` がターミナルで承認フローを体験する版 (starter で編集する対象)。
 - `agent.py` + `langgraph.json` がブラウザ (Agent Chat UI) から操作するための版。
 
 ---

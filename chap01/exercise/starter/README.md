@@ -1,6 +1,6 @@
-# 演習 1-1【starter / 受講者用】: 環境疎通確認 + 公式ドキュメント検索
+# 演習 1-1【starter】: 環境疎通確認 + 公式ドキュメント検索
 
-研修コース「Agentic AI 開発実践 - LangChain 版」 / **第1章「Agentic AI と LangChain」** の演習用 Notebook (受講者用) です。
+研修コース「Agentic AI 開発実践 - LangChain 版」 / **第1章「Agentic AI と LangChain」** の演習用 Notebook です。
 
 - **ファイル**: [`chap01_exercise_1-1_setup.ipynb`](./chap01_exercise_1-1_setup.ipynb)
 - **形式**: Google Colab Notebook (Jupyter nbformat 4)
@@ -43,17 +43,17 @@ Notebook の最後のコードセルに、URL を貼り付ける **3 つの `# T
 ## 前提条件
 
 - **Google アカウント** (Colab を使うため)
-- **事前配布された OpenAI API キー** (この演習では存在確認のみに使います)
+- **研修で配布される OpenAI API キー** (この演習では存在確認のみに使います)
 
-## 提出物
+## この演習のゴール
 
 - シークレット登録済みの Colab 環境 (疎通確認セルで **✅** の成功メッセージが出た状態)
 - **3 つの URL** (create_agent / Middleware 組み込み一覧 / changelog)
 
-## 評価のポイント
+## できたか確認しよう
 
-- **環境準備**: シークレットへの `OPENAI_API_KEY` 登録と、疎通確認セルの成功メッセージが確認できたか。
-- **ドキュメント検索**: 3 ページとも、**現行ドキュメント `docs.langchain.com` ドメインから特定**できたか。旧サイト `python.langchain.com` と混同していないか。
+- **環境準備**: シークレットに `OPENAI_API_KEY` を登録し、疎通確認セルで成功メッセージが出ていれば OK です。
+- **ドキュメント検索**: 3 ページとも、**現行ドキュメント `docs.langchain.com` ドメイン**で見つけられていれば OK です。旧サイト `python.langchain.com` と取り違えていないか確認しましょう。
 
 ## ヒント
 

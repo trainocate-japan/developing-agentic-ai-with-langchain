@@ -21,11 +21,11 @@ chap01/
 ├── README.md                                       # このファイル
 └── exercise/
     ├── starter/
-    │   ├── README.md                               # 受講者向け説明
-    │   └── chap01_exercise_1-1_setup.ipynb         # 受講者用 (URL は自分で記入)
+    │   ├── README.md                               # 演習の説明
+    │   └── chap01_exercise_1-1_setup.ipynb         # TODO を自分で埋める版
     └── solution/
-        ├── README.md                               # 講師向け説明
-        └── chap01_exercise_1-1_setup.ipynb         # 講師用 (参照 URL 記入済み)
+        ├── README.md                               # 解答例の説明
+        └── chap01_exercise_1-1_setup.ipynb         # 解答例 (参照 URL 記入済み)
 ```
 
 ## 演習 1-1 の概要
@@ -35,14 +35,13 @@ chap01/
 | **狙い** | 章目標 5「公式ドキュメントを一次情報として活用できる」を、環境準備とあわせて体験する |
 | **対応する学習目標** | 章目標 5 (公式ドキュメントの活用) |
 | **やること** | ① Colab シークレットに `OPENAI_API_KEY` を登録 → ② 疎通確認セルを実行 (存在チェックのみ) → ③ docs.langchain.com で 3 ページを検索して URL を提出 |
-| **前提条件** | Google アカウント、事前配布された OpenAI API キー |
-| **提出物** | シークレット登録済みの Colab 環境、3 つの URL (create_agent / Middleware 組み込み一覧 / changelog) |
-| **所要時間** | 約 10 分 |
+| **前提条件** | Google アカウント、研修で配布される OpenAI API キー |
+| **この演習のゴール** | シークレット登録済みの Colab 環境、3 つの URL (create_agent / Middleware 組み込み一覧 / changelog) |
 
-## 評価のポイント
+## できたか確認しよう
 
-- **環境準備**: Colab シークレットへの `OPENAI_API_KEY` 登録と、疎通確認セルの成功メッセージが確認できたか。
-- **ドキュメント検索**: 3 ページ (create_agent / Middleware 組み込み一覧 / changelog) を、**いずれも現行ドキュメント `docs.langchain.com` ドメインから特定**できたか。旧サイト `python.langchain.com` と混同していないか。
+- **環境準備**: Colab シークレットに `OPENAI_API_KEY` を登録し、疎通確認セルで成功メッセージが出ていれば OK です。
+- **ドキュメント検索**: 3 ページ (create_agent / Middleware 組み込み一覧 / changelog) を、**いずれも現行ドキュメント `docs.langchain.com` ドメイン**で見つけられていれば OK です。旧サイト `python.langchain.com` と取り違えていないか確認しましょう。
 
 ## 環境について
 
