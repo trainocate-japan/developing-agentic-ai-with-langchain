@@ -174,7 +174,7 @@ pip install -r requirements.txt             # ④ 依存をインストール (�
 | 第4章 (Step 3) | Checkpointer / LangSmith | 社員ごとに会話を記憶し、トレースで診断できる |
 | 第5章 (Step 4) | MCP | 社内ナレッジ MCP サーバーからツールを調達 |
 | 第6章 (Step 5) | Middleware / HITL / Agent Chat UI | PII 保護と要承認オペを備え、UI から操作できる |
-| 第7章 (Step 6) | 評価 | トラジェクトリ評価による回帰テスト付き |
+| 第7章 (Step 6) | 評価 | 回帰評価つき: プロンプト修正の前後を Experiment で比較できる |
 | 第8章 (Step 7) | Multi-agent | FAQ 担当・オペ担当を束ねる **Web アプリとして完成** |
 
 最終成果物は「**Agent Chat UI から操作できるヘルプデスク・マルチエージェント**」です。
@@ -191,8 +191,8 @@ pip install -r requirements.txt             # ④ 依存をインストール (�
 | 4 | メモリと可観測性 | Checkpointer と LangSmith トレース | 会話を記憶するヘルプデスク v2 |
 | 5 | MCP サーバーの利用 | MultiServerMCPClient で 2 サーバー接続 | 社内ナレッジ MCP の接続 v3 |
 | 6 | Middleware と HITL | Prebuilt / Custom Middleware | 要承認オペレーション + Agent Chat UI v4 |
-| 7 | エージェントの評価 | トラジェクトリ評価を動かす | ヘルプデスクの回帰テスト |
-| 8 | マルチエージェント開発 | エージェントのツール化 | パターン選択討議 + 総合演習 (最終成果物) |
+| 7 | エージェントの評価 | LangSmith のオフライン評価を一通り (Dataset → Experiment → 比較) | ヘルプデスクの回帰評価 |
+| 8 | マルチエージェント開発 | エージェントのツール化 | 総合演習 (最終成果物) |
 
 ---
 
