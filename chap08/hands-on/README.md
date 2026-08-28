@@ -110,7 +110,7 @@ LangSmith は**コース全体で有効化済み**です。実行後に [smith.l
 
 トレースを開くと、supervisor の 1 ターンの中に `research` ツールの呼び出しがあり、
 **その内側に** `research_agent` の ReAct ループ (モデル呼び出しと `search_docs` の実行) が
-入れ子で表示されます。`name="research_agent"` を付けたおかげで、入れ子のどれがサブエージェントか
+入れ子で表示されます ([Details] ビューで画面上部の [Expand] をクリックして表示範囲を広げてください)。`name="research_agent"` を付けたおかげで、入れ子のどれがサブエージェントか
 ひと目で分かります。
 
 ```text
