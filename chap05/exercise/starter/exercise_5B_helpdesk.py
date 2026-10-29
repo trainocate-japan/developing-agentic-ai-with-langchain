@@ -111,7 +111,11 @@ async def main():
     #         相対パスだと「どのディレクトリから実行したか」でずれて起動に失敗します。
     client = MultiServerMCPClient(
         {
-            # TODO①: ここにサーバー "knowledge" の接続設定 (transport / command / args) を書く
+            "knowledge": {
+                "transport": "stdio",        # ローカル: サブプロセスとして起動して通信
+                "command": "python",         # 起動コマンド
+                "args": [KNOWLEDGE_SERVER_PATH],  # 起動するスクリプト (絶対パス)
+            }
         }
     )
 
@@ -122,12 +126,12 @@ async def main():
     #     ※ await はすでに書いてあります。あなたが書くのは await の右側
     #        ——「ツールを取得するメソッド呼び出し」——だけです。
     #     ヒント: クライアントの get_tools() メソッドを呼びます (全サーバーのツールを一括取得)。
-    mcp_tools = await ___  # TODO②-(1): client からツールを取得するメソッド呼び出しに置き換える
+    mcp_tools = await client.get_tools()  # TODO②-(1): client からツールを取得するメソッド呼び出しに置き換える
 
     # (2) MCP から借りたツールと、手元の自作ツール (get_system_status) を結合します。
     #     どちらも LangChain の Tool オブジェクトなので、Python のリスト結合で混在できます。
     #     ヒント: mcp_tools + [get_system_status] のように、リスト同士を足し算します。
-    tools = ___  # TODO②-(2): mcp_tools と [get_system_status] を結合したリストに置き換える
+    tools = mcp_tools + [get_system_status]   # TODO②-(2): mcp_tools と [get_system_status] を結合したリストに置き換える
 
     # ------------------------------------------------------------------
     # ここから下は【配布済み・編集不要】。TODO①② が正しく埋まれば動きます。
